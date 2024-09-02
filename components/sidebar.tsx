@@ -5,6 +5,8 @@ import {
   FaChalkboardTeacher,
   FaUsers,
   FaSignOutAlt,
+  FaBell,
+  FaUser,
 } from "react-icons/fa";
 import { MdOutlineQrCodeScanner } from "react-icons/md";
 
@@ -70,6 +72,24 @@ const Sidebar = ({ children }) => {
               >
                 <FaUsers className="mr-3" />
                 <span>Students</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/teacher/profile"
+                className="flex items-center text-gray-700 hover:text-blue-600"
+              >
+                <FaUser className="mr-3" />
+                <span>Profile</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/teacher/notifications"
+                className="flex items-center text-gray-700 hover:text-blue-600"
+              >
+                <FaBell className="mr-3" />
+                <span>Notifications</span>
               </a>
             </li>
             <li>

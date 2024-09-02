@@ -8,7 +8,7 @@ export default function Login() {
   const [userRole, setUserRole] = useState('student'); // Default to 'student'
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-500 to-green-500 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-r p-6 from-blue-500 to-green-500 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         {/* Logo */}
         <div className="flex items-center justify-center mb-6">
