@@ -14,10 +14,24 @@ For the lecturer module of the online attendance management system, the followin
 
 7. **Profile Page**: A page where lecturers can view and edit their profile information, including personal details, contact information, and password settings.
 
-8. **Settings Page**: A page for adjusting system settings specific to the lecturer’s preferences, such as notification preferences, default view settings, and language options.
+*8. **Settings Page**: A page for adjusting system settings specific to the lecturer’s preferences, such as notification preferences, default view settings, and language options.
 
-9. **Help and Support Page**: A page that provides resources, FAQs, and contact information for technical support to assist lecturers with any issues they may encounter.
+*9. **Help and Support Page**: A page that provides resources, FAQs, and contact information for technical support to assist lecturers with any issues they may encounter.
 
-10. **Logout Page**: A dedicated page or button to safely log out of the system, ensuring the security of the lecturer’s account.
+*10. **Logout Page**: A dedicated page or button to safely log out of the system, ensuring the security of the lecturer’s account.
 
 These pages collectively support the functionalities required by lecturers to manage attendance efficiently, track student performance, and maintain effective communication within the system.
+
+
+For the **Student Module** of the online barcode attendance system, the following pages are required:
+
+1. **Dashboard Page**: A page providing students with an overview of their attendance records, upcoming classes, and any notifications or alerts regarding their attendance status.
+
+2. **Attendance Records Page**: A detailed view where students can see their attendance history for each class, including dates of attendance, absences, and any remarks from lecturers.
+
+3. **Profile Page**: A page for students to view and update their personal information, such as contact details and password.
+
+4. **Notifications Page**: A page that displays messages and alerts from lecturers or the administration, such as upcoming class reminders, attendance warnings, or system announcements.
+
+*5. **Support/Help Page**: A page where students can access help documentation, frequently asked questions (FAQs), and contact information for technical support or other inquiries related to the attendance system.
+
