@@ -24,12 +24,12 @@ const StudentSidebar = ({ children }) => {
     <div className="flex h-full">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 w-64 bg-gradient-to-br from-blue-500 to-green-500 p-5 text-white transform ${
+        className={`fixed inset-y-0 left-0 w-64 bg-blue-500 p-5 text-white transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 md:relative md:translate-x-0 md:flex md:flex-col`}
       >
-        <div className="flex items-center justify-center p-3">
-          <img src="/logo.jfif" alt="AttendEase Logo" className="h-12 w-12" />
+        <div className="flex items-center justify-center p-3 rounded-full">
+          <img src="/logo.jfif" alt="AttendEase Logo" className="h-12 w-12 rounded-full" />
 
           <div className="text-2xl font-bold text-gray-800 ml-2">AttendEase</div>
         </div>

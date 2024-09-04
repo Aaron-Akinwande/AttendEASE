@@ -13,7 +13,7 @@ const AttendanceRecordsPage = () => {
 
   return (
     <StudentSidebar>
-      <div className="p-4 sm:p-6 bg-gradient-to-br from-blue-200 to-green-300 min-h-screen rounded-lg">
+      <div className="p-4 sm:p-6 bg-blue-200 min-h-screen rounded-lg">
         <h1 className="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-4 sm:mb-6">
           Attendance Records
         </h1>

@@ -12,7 +12,7 @@ const NotificationsPage = () => {
 
   return (
     <StudentSidebar>
-      <div className="p-4 sm:p-6 bg-gradient-to-br from-blue-200 to-green-300 min-h-screen">
+      <div className="p-4 sm:p-6 bg-blue-200 rounded-lg min-h-screen">
         <h1 className="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-4 sm:mb-6">
           Notifications
         </h1>
