@@ -7,9 +7,13 @@ export default function Login() {
     const router = useRouter()
   const [userRole, setUserRole] = useState('student'); // Default to 'student'
 
+  const handleClick = () => {
+    router.push(`/${userRole}`);
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-r p-6 from-blue-500 to-green-500 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+    <div className="min-h-screen bg-blue-500  flex items-center justify-center">
+      <div className="bg-white outline-dashed h-[80vh] p-8 rounded-lg shadow-md w-full max-w-md">
         {/* Logo */}
         <div className="flex items-center justify-center mb-6">
           <img src="/logo.jfif" alt="AttendEase Logo" className="h-12 w-12" />
@@ -68,7 +72,7 @@ export default function Login() {
         </div>
 
         {/* Login Button */}
-        <button className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300" onClick={()=>{router.push('/teacher')}}>
+        <button className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300" onClick={handleClick}>
           Login
         </button>
 

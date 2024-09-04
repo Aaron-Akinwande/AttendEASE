@@ -26,8 +26,8 @@ const Sidebar = ({ children }) => {
         } md:translate-x-0 transition-transform duration-200 ease-in-out`}
       >
         <div className="flex items-center justify-between h-16 p-4">
-          <div className="flex items-center justify-center ">
-            <img src="/logo.jfif" alt="AttendEase Logo" className="h-12 w-12" />
+          <div className="flex items-center justify-center rounded-full">
+            <img src="/logo.jfif" alt="AttendEase Logo" className="h-12 w-12 rounded-full" />
             <h2 className="text-2xl font-bold text-gray-800 ml-2">
               AttendEase
             </h2>

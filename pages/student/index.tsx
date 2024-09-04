@@ -27,7 +27,7 @@ const DashboardPage = () => {
 
   return (
     <StudentSidebar>
-      <div className="p-6 rounded-lg bg-gradient-to-br from-blue-200 to-green-300 min-h-screen">
+      <div className="p-6 rounded-lg bg-blue-200 min-h-screen">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
           Student Dashboard
         </h1>
