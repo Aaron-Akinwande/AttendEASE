@@ -2,6 +2,7 @@ import Sidebar from "@/components/sidebar";
 import React, { useState } from "react";
 import { FaEdit, FaPlus, FaTrash, FaBarcode, FaTimes } from "react-icons/fa";
 import Barcode from "react-barcode";
+import { useRouter } from "next/router"; // Import Next.js router
 
 const ClassManagement = () => {
   const [classes, setClasses] = useState([
@@ -13,6 +14,8 @@ const ClassManagement = () => {
   const [currentClass, setCurrentClass] = useState(null);
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [barcodeValue, setBarcodeValue] = useState("");
+
+  const router = useRouter();
 
   const handleAddClass = () => {
     if (newClassName.trim() === "") {
@@ -69,6 +72,10 @@ const ClassManagement = () => {
     setBarcodeValue("");
   };
 
+  const navigateToClassDetail = (classId) => {
+    router.push(`/teacher/${classId}`); // Navigate to the class detail page
+  };
+
   return (
     <Sidebar>
       <div className="p-4 md:p-8">
@@ -123,29 +130,42 @@ const ClassManagement = () => {
             </thead>
             <tbody>
               {classes.map((clsItem) => (
-                <tr key={clsItem.id} className="border-b border-gray-200">
+                <tr
+                  key={clsItem.id}
+                  className="border-b border-gray-200 cursor-pointer"
+                  onClick={() => navigateToClassDetail(clsItem.id)} // Navigate to class detail on click
+                >
                   <td className="py-3 px-4">{clsItem.id}</td>
                   <td className="py-3 px-4">{clsItem.name}</td>
                   <td className="py-3 px-4">{clsItem.students}</td>
                   <td className="py-3 px-4 text-center space-x-2">
                     <button
                       className="text-blue-600 hover:text-blue-800"
-                      onClick={() => handleEditClass(clsItem)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditClass(clsItem);
+                      }}
                     >
                       <FaEdit />
                     </button>
                     <button
                       className="text-red-600 hover:text-red-800"
-                      onClick={() => handleDeleteClass(clsItem.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteClass(clsItem.id);
+                      }}
                     >
                       <FaTrash />
                     </button>
-                    <button
+                    {/* <button
                       className="text-green-600 hover:text-green-800"
-                      onClick={() => handleStartSession()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleStartSession();
+                      }}
                     >
                       <FaBarcode />
-                    </button>
+                    </button> */}
                   </td>
                 </tr>
               ))}
@@ -154,7 +174,7 @@ const ClassManagement = () => {
         </div>
 
         {/* Barcode Display */}
-        {isSessionActive && (
+        {/* {isSessionActive && (
           <div className="mt-8 p-4 bg-white rounded shadow-lg">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">
               Current Session Barcode
@@ -168,7 +188,7 @@ const ClassManagement = () => {
               End Session
             </button>
           </div>
-        )}
+        )} */}
       </div>
     </Sidebar>
   );

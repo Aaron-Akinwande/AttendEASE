@@ -9,25 +9,25 @@ const StudentList = () => {
       id: 1,
       name: "John Doe",
       email: "john.doe@example.com",
-      attendance: "85%",
+      class: "Computer Science",
     },
     {
       id: 2,
       name: "Jane Smith",
       email: "jane.smith@example.com",
-      attendance: "92%",
+      class: "Mathematics",
     },
     {
       id: 3,
       name: "Mark Johnson",
       email: "mark.johnson@example.com",
-      attendance: "78%",
+      class: "Physics",
     },
     {
       id: 4,
       name: "Lucy Brown",
       email: "lucy.brown@example.com",
-      attendance: "88%",
+      class: "Chemistry",
     },
   ]);
 
@@ -35,7 +35,7 @@ const StudentList = () => {
   const [newStudent, setNewStudent] = useState({
     name: "",
     email: "",
-    attendance: "",
+    class: "",
   });
 
   // Function to handle removal of a student
@@ -53,17 +53,17 @@ const StudentList = () => {
   // Function to add a new student to the list
   const handleAddStudent = (e) => {
     e.preventDefault();
-    if (newStudent.name && newStudent.email && newStudent.attendance) {
+    if (newStudent.name && newStudent.email && newStudent.class) {
       setStudents([
         ...students,
         {
           id: students.length + 1,
           name: newStudent.name,
           email: newStudent.email,
-          attendance: `${newStudent.attendance}%`,
+          class: newStudent.class,
         },
       ]);
-      setNewStudent({ name: "", email: "", attendance: "" }); // Reset form
+      setNewStudent({ name: "", email: "", class: "" }); // Reset form
     }
   };
 
@@ -94,15 +94,13 @@ const StudentList = () => {
               required
             />
             <input
-              type="number"
-              name="attendance"
-              value={newStudent.attendance}
+              type="text"
+              name="class"
+              value={newStudent.class}
               onChange={handleInputChange}
-              placeholder="Attendance %"
+              placeholder="Class"
               className="p-2 border rounded w-full"
               required
-              min="0"
-              max="100"
             />
           </div>
           <button
@@ -122,7 +120,7 @@ const StudentList = () => {
                 <th className="py-3 px-4 text-left">Student ID</th>
                 <th className="py-3 px-4 text-left">Name</th>
                 <th className="py-3 px-4 text-left">Email</th>
-                <th className="py-3 px-4 text-left">Attendance</th>
+                <th className="py-3 px-4 text-left">Class</th>
                 <th className="py-3 px-4 text-center">Actions</th>
               </tr>
             </thead>
@@ -132,7 +130,7 @@ const StudentList = () => {
                   <td className="py-3 px-4">{student.id}</td>
                   <td className="py-3 px-4">{student.name}</td>
                   <td className="py-3 px-4">{student.email}</td>
-                  <td className="py-3 px-4">{student.attendance}</td>
+                  <td className="py-3 px-4">{student.class}</td>
                   <td className="py-3 px-4 text-center space-x-2">
                     <button className="text-blue-600 hover:text-blue-800">
                       <FaUserEdit />
