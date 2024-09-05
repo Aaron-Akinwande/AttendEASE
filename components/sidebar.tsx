@@ -47,7 +47,7 @@ const Sidebar = ({ children }) => {
                 <span>Dashboard</span>
               </a>
             </li>
-            <li>
+            {/* <li>
               <a
                 href="/teacher/attendance_list"
                 className="flex items-center text-gray-700 hover:text-blue-600"
@@ -55,7 +55,7 @@ const Sidebar = ({ children }) => {
                 <MdOutlineQrCodeScanner  className="mr-3" />
                 <span>Attendance</span>
               </a>
-            </li>
+            </li> */}
             <li>
               <a
                 href="/teacher/classes"
