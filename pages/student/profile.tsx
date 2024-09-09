@@ -2,7 +2,6 @@ import StudentSidebar from "@/components/studentsidebar";
 import React, { useState } from "react";
 
 const ProfilePage = () => {
-  // Sample state for demonstration purposes
   const [studentInfo, setStudentInfo] = useState({
     name: "John Doe",
     email: "john.doe@example.com",
@@ -11,13 +10,11 @@ const ProfilePage = () => {
 
   const [editMode, setEditMode] = useState(false);
 
-  // Function to handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setStudentInfo({ ...studentInfo, [name]: value });
   };
 
-  // Function to handle form submission (e.g., updating profile)
   const handleSubmit = (e) => {
     e.preventDefault();
     // Here you would normally handle form submission, e.g., sending data to an API
@@ -32,13 +29,12 @@ const ProfilePage = () => {
           Your Profile
         </h1>
 
-        {/* Profile Information Section */}
         <div className="p-4 bg-white rounded shadow-lg">
           <h2 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-4">
             Personal Information
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Name */}
+            
             <div>
               <label className="block text-gray-700 text-sm font-bold mb-2">
                 Name
@@ -55,7 +51,7 @@ const ProfilePage = () => {
               />
             </div>
 
-            {/* Email */}
+            
             <div>
               <label className="block text-gray-700 text-sm font-bold mb-2">
                 Email
@@ -72,7 +68,7 @@ const ProfilePage = () => {
               />
             </div>
 
-            {/* Phone */}
+            
             <div>
               <label className="block text-gray-700 text-sm font-bold mb-2">
                 Phone
@@ -89,7 +85,7 @@ const ProfilePage = () => {
               />
             </div>
 
-            {/* Buttons */}
+            
             <div className="flex justify-end space-x-4">
               {editMode ? (
                 <>

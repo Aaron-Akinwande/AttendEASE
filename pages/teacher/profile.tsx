@@ -3,7 +3,6 @@ import Sidebar from "@/components/sidebar";
 import { FaUser, FaEnvelope, FaPhone, FaLock } from "react-icons/fa";
 
 const ProfilePage = () => {
-  // Sample data for demonstration
   const [profile, setProfile] = useState({
     name: "John Doe",
     email: "johndoe@example.com",
@@ -18,7 +17,6 @@ const ProfilePage = () => {
   };
 
   const handleSave = () => {
-    // Logic to save profile information
     console.log("Profile saved:", profile);
     setEditing(false);
   };
@@ -35,7 +33,6 @@ const ProfilePage = () => {
             Personal Information
           </h2>
           <form>
-            {/* Name */}
             <div className="mb-4">
               <label className="block text-gray-700 font-semibold mb-2">
                 <FaUser className="inline mr-2" /> Name
@@ -52,7 +49,6 @@ const ProfilePage = () => {
               />
             </div>
 
-            {/* Email */}
             <div className="mb-4">
               <label className="block text-gray-700 font-semibold mb-2">
                 <FaEnvelope className="inline mr-2" /> Email
@@ -69,7 +65,6 @@ const ProfilePage = () => {
               />
             </div>
 
-            {/* Phone */}
             <div className="mb-4">
               <label className="block text-gray-700 font-semibold mb-2">
                 <FaPhone className="inline mr-2" /> Phone
@@ -86,7 +81,6 @@ const ProfilePage = () => {
               />
             </div>
 
-            {/* Password */}
             {editing && (
               <div className="mb-4">
                 <label className="block text-gray-700 font-semibold mb-2">
@@ -102,7 +96,6 @@ const ProfilePage = () => {
               </div>
             )}
 
-            {/* Buttons */}
             <div className="flex justify-end">
               {editing ? (
                 <button

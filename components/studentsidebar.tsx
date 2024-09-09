@@ -22,7 +22,7 @@ const StudentSidebar = ({ children }) => {
 
   return (
     <div className="flex h-full">
-      {/* Sidebar */}
+      
       <div
         className={`fixed inset-y-0 left-0 w-64 bg-blue-500 p-5 text-white transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
@@ -94,10 +94,10 @@ const StudentSidebar = ({ children }) => {
         </nav>
       </div>
 
-      {/* Main Content Area */}
+      
       <div className="flex-grow p-6 bg-gray-100 ">{children}</div>
 
-      {/* Mobile Hamburger Menu */}
+      
       <button
         className={`fixed z-50 text-white md:hidden ${
           isOpen ? "top-4 right-4" : "top-4 left-4"

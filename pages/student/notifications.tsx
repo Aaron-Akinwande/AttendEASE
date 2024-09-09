@@ -3,7 +3,6 @@ import React from "react";
 import { FaBell, FaExclamationCircle, FaInfoCircle } from "react-icons/fa";
 
 const NotificationsPage = () => {
-  // Sample notifications data for demonstration purposes
   const notifications = [
     { message: "Upcoming class reminder: Mathematics 101", type: "info" },
     { message: "Attendance below 75% in Physics 102", type: "warning" },
@@ -17,7 +16,7 @@ const NotificationsPage = () => {
           Notifications
         </h1>
 
-        {/* Notifications List Section */}
+        
         <div className="p-4 bg-white rounded shadow-lg">
           <h2 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-4">
             Messages and Alerts

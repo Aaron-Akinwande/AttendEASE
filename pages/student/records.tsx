@@ -3,7 +3,7 @@ import React from "react";
 import { FaCheckCircle, FaTimesCircle, FaExclamationCircle } from "react-icons/fa";
 
 const AttendanceRecordsPage = () => {
-  // Sample data for demonstration
+  
   const attendanceHistory = [
     { date: "2024-09-01", status: "Present", remarks: "" },
     { date: "2024-09-02", status: "Absent", remarks: "Medical leave" },
@@ -18,7 +18,7 @@ const AttendanceRecordsPage = () => {
           Attendance Records
         </h1>
 
-        {/* Attendance Records Table */}
+        
         <div className="p-4 bg-white rounded-lg shadow-lg">
           <h2 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-4">
             Your Attendance History
