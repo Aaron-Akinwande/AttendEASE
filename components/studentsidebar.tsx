@@ -60,12 +60,12 @@ const StudentSidebar = ({ children }) => {
             <li
               className="mb-4"
               onClick={() => {
-                router.push("/student/records");
+                router.push("/student/classes");
               }}
             >
               <div className="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded cursor-pointer">
                 <FaBook />
-                <span>Records</span>
+                <span>Classes</span>
               </div>
             </li>
             <li
