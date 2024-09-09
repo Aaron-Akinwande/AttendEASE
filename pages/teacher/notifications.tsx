@@ -7,7 +7,7 @@ const NotificationsPage = () => {
   const [messageType, setMessageType] = useState("info");
 
   const handleSendNotification = () => {
-    // Logic to send notification to students
+   
     console.log(`Sending ${messageType} notification: ${notification}`);
     setNotification("");
   };
@@ -55,13 +55,13 @@ const NotificationsPage = () => {
           </button>
         </div>
 
-        {/* Sent Notifications Section */}
+        
         <div className="mt-6 p-4 bg-white rounded shadow-lg">
           <h2 className="text-xl sm:text-2xl font-semibold text-gray-700 mb-4">
             Sent Notifications
           </h2>
           <ul className="space-y-4">
-            {/* Example of a sent notification */}
+      
             <li className="flex items-center p-3 rounded-lg bg-blue-100 border-l-4 border-blue-500">
               <FaBell className="text-blue-500 mr-3" size={24} />
               <div className="flex-grow text-gray-700">

@@ -1,18 +1,18 @@
 import Sidebar from "@/components/sidebar";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import Barcode from "react-barcode"; // Import Barcode component
-import { FaTimes } from "react-icons/fa"; // Import icon for ending session
+import Barcode from "react-barcode"; 
+import { FaTimes } from "react-icons/fa"; 
 
 const ClassDetail = () => {
   const router = useRouter();
-  const { id } = router.query; // Get class ID from the URL
+  const { id } = router.query; 
 
   // Initial class and student data (replace with actual fetching logic)
   const [classData, setClassData] = useState({
     id: 1,
     name: "Computer Science 101",
-    totalSessions: 5, // Initial total number of sessions
+    totalSessions: 5, 
     students: [
       { id: 1, name: "John Doe", attendance: false, attendedSessions: 4 },
       { id: 2, name: "Jane Smith", attendance: false, attendedSessions: 5 },
@@ -22,19 +22,17 @@ const ClassDetail = () => {
 
   const [sessionActive, setSessionActive] = useState(false);
   const [barcodeValue, setBarcodeValue] = useState("");
-  const [searchQuery, setSearchQuery] = useState(""); // State to track search input
+  const [searchQuery, setSearchQuery] = useState(""); 
 
   useEffect(() => {
     // Fetch the class data including students and class name using the `id`
     // Replace this with actual fetching logic based on `id`.
   }, [id]);
 
-  // Filter students based on search query
   const filteredStudents = classData.students.filter((student) =>
     student.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Toggle attendance for a student
   const handleAttendanceToggle = (studentId) => {
     const updatedStudents = classData.students.map((student) =>
       student.id === studentId
@@ -44,22 +42,17 @@ const ClassDetail = () => {
     setClassData({ ...classData, students: updatedStudents });
   };
 
-  // Start the session and generate barcode
   const handleStartSession = () => {
     setSessionActive(true);
-    setBarcodeValue(`class-${Date.now()}`); // Generate unique barcode value
+    setBarcodeValue(`class-${Date.now()}`); 
   };
-
-  // End the session and process attendance
   const handleEndSession = () => {
     const attendedStudents = classData.students.filter(
       (student) => student.attendance
     );
 
-    // Update total number of sessions
     const updatedTotalSessions = classData.totalSessions + 1;
 
-    // Update the attendedSessions for each student
     const updatedStudents = classData.students.map((student) => {
       if (student.attendance) {
         return { ...student, attendedSessions: student.attendedSessions + 1 };
@@ -74,14 +67,10 @@ const ClassDetail = () => {
     });
 
     setSessionActive(false);
-    setBarcodeValue(""); // Clear the barcode
 
-    alert(
-      `Session ended. ${attendedStudents.length} students marked present.`
-    );
+    alert(`Session ended. ${attendedStudents.length} students marked present.`);
   };
 
-  // Calculate the attendance percentage for each student
   const getAttendancePercentage = (attendedSessions) => {
     return classData.totalSessions > 0
       ? Math.round((attendedSessions / classData.totalSessions) * 100)
@@ -91,10 +80,10 @@ const ClassDetail = () => {
   return (
     <Sidebar>
       <div className="p-4 md:p-8">
-        {/* Class Header */}
-        <h2 className="text-3xl font-bold text-gray-800 mb-4">{classData.name}</h2>
-        
-        {/* Search Bar */}
+        <h2 className="text-3xl font-bold text-gray-800 mb-4">
+          {classData.name}
+        </h2>
+
         <div className="mb-4">
           <input
             type="text"
@@ -105,7 +94,6 @@ const ClassDetail = () => {
           />
         </div>
 
-        {/* Session Controls */}
         {!sessionActive ? (
           <button
             className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-md mb-4"
@@ -122,14 +110,13 @@ const ClassDetail = () => {
           </button>
         )}
 
-        {/* Barcode Display */}
         {sessionActive && barcodeValue && (
           <div className="mt-4 bg-white p-4 rounded shadow-lg w-full">
             <h3 className="text-xl font-semibold text-gray-700 mb-2">
               Current Session Barcode
             </h3>
             <div className=" w-full flex justify-center items-center">
-            <Barcode value={barcodeValue} />
+              <Barcode value={barcodeValue} />
             </div>
             <button
               className="mt-4 bg-red-600 hover:bg-red-700 text-white p-2 rounded-md"
@@ -141,7 +128,6 @@ const ClassDetail = () => {
           </div>
         )}
 
-        {/* Student List with Attendance */}
         {sessionActive && (
           <div className=" pt-5">
             <h3 className="text-xl font-semibold text-gray-700 mb-2">
@@ -175,7 +161,6 @@ const ClassDetail = () => {
           </div>
         )}
 
-        {/* Show students if session is not active */}
         {!sessionActive && (
           <div className=" pt-2">
             <h3 className="text-xl font-semibold text-gray-700 mb-2">

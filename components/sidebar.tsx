@@ -19,7 +19,6 @@ const Sidebar = ({ children }) => {
 
   return (
     <div className="flex">
-      {/* Sidebar */}
       <div
         className={`fixed z-30 inset-y-0 left-0 w-64 bg-white border-r border-gray-200 transform ${
           isOpen ? "-translate-x-0" : "-translate-x-full"
@@ -105,7 +104,6 @@ const Sidebar = ({ children }) => {
         </nav>
       </div>
 
-      {/* Mobile menu button */}
       <div className="md:hidden fixed bottom-4 right-4 z-40">
         <button
           className="bg-blue-600 text-white p-3 rounded-full shadow-lg"
@@ -115,7 +113,6 @@ const Sidebar = ({ children }) => {
         </button>
       </div>
 
-      {/* Main content */}
       <div className="flex-grow md:ml-64">{children}</div>
     </div>
   );

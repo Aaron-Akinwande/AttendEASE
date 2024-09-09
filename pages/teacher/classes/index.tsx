@@ -1,7 +1,7 @@
 import Sidebar from "@/components/sidebar";
 import React, { useState } from "react";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
-import { useRouter } from "next/router"; // Import Next.js router
+import { useRouter } from "next/router"; 
 
 const ClassManagement = () => {
   const [classes, setClasses] = useState([
@@ -60,7 +60,7 @@ const ClassManagement = () => {
   };
 
   const navigateToClassDetail = (classId) => {
-    router.push(`/teacher/classes/${classId}`); // Navigate to the class detail page
+    router.push(`/teacher/classes/${classId}`); 
   };
 
   return (
@@ -70,7 +70,7 @@ const ClassManagement = () => {
           Class Management
         </h2>
 
-        {/* Add/Edit Class Section */}
+        
         <div className="mb-6">
           <h3 className="text-xl font-semibold text-gray-700 mb-2">
             {editMode ? "Edit Class" : "Add New Class"}
@@ -100,8 +100,6 @@ const ClassManagement = () => {
             </button>
           </div>
         </div>
-
-        {/* Classes List */}
         <div>
           <h3 className="text-xl font-semibold text-gray-700 mb-2">
             Classes List
@@ -120,7 +118,7 @@ const ClassManagement = () => {
                 <tr
                   key={clsItem.id}
                   className="border-b border-gray-200 cursor-pointer"
-                  onClick={() => navigateToClassDetail(clsItem.id)} // Navigate to class detail on click
+                  onClick={() => navigateToClassDetail(clsItem.id)} 
                 >
                   <td className="py-3 px-4">{clsItem.id}</td>
                   <td className="py-3 px-4">{clsItem.name}</td>

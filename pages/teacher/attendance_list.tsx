@@ -7,7 +7,7 @@ const AttendanceManagement = () => {
   const [attendanceList, setAttendanceList] = useState([
     { id: 1, name: 'John Doe', status: 'Present' },
     { id: 2, name: 'Jane Smith', status: 'Absent' },
-    // Add more students here
+   
   ]);
 
   const handleScan = () => {
@@ -16,7 +16,7 @@ const AttendanceManagement = () => {
       return;
     }
 
-    // Simulate barcode scanning
+   
     const updatedList = attendanceList.map((student) =>
       student.id.toString() === scannedBarcode
         ? { ...student, status: 'Present' }
@@ -39,7 +39,7 @@ const AttendanceManagement = () => {
     <div className="p-4 md:p-8">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">Attendance Management</h2>
 
-      {/* Barcode Scanner Section */}
+    
       <div className="mb-6">
         <h3 className="text-xl font-semibold text-gray-700 mb-2">Scan Barcode</h3>
         <div className="flex items-center space-x-4">
@@ -59,7 +59,7 @@ const AttendanceManagement = () => {
         </div>
       </div>
 
-      {/* Attendance List */}
+     
       <div>
         <h3 className="text-xl font-semibold text-gray-700 mb-2">Attendance List</h3>
         <table className="min-w-full bg-white rounded-lg shadow-md overflow-hidden">

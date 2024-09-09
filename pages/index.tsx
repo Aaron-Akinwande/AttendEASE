@@ -9,13 +9,13 @@ export default function Home() {
     <div className="bg-gradient-to-r from-blue-400 to-green-400 min-h-screen flex flex-col">
       <header className="bg-white py-4 shadow">
         <div className="container mx-auto flex justify-between items-center px-6">
-          {/* Logo */}
+          
           <div className="flex items-center">
             <img src="/logo.jfif" alt="AttendEase Logo" className="h-8 w-8" />
             <h1 className="text-xl font-bold ml-2">AttendEase</h1>
           </div>
 
-          {/* Mobile Menu Toggle */}
+         
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -25,7 +25,6 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Navigation Links for Larger Screens */}
           <nav className="hidden md:flex space-x-4">
             
             <Link href="/login" passHref>
@@ -34,7 +33,6 @@ export default function Home() {
           </nav>
         </div>
 
-        {/* Dropdown Menu for Mobile */}
         {isMenuOpen && (
           <div className="md:hidden bg-white px-6 py-4">
             
@@ -45,7 +43,6 @@ export default function Home() {
         )}
       </header>
 
-      {/* Hero Section */}
       <main className="flex-grow">
         <section className="flex items-center justify-center flex-col text-center py-20">
           <h2 className="text-5xl font-extrabold text-white mb-4">Welcome to AttendEase</h2>
@@ -57,7 +54,7 @@ export default function Home() {
           </Link>
         </section>
 
-        {/* Features Section */}
+        
         <section id="features" className="py-16 px-6 bg-white">
           <div className="container mx-auto text-center">
             <h2 className="text-3xl font-bold mb-8">Features</h2>
@@ -82,7 +79,7 @@ export default function Home() {
         </section>
       </main>
 
-      {/* Footer */}
+
       <footer className="bg-gray-800 text-white py-8">
         <div className="container mx-auto text-center">
           <p className="mb-4">&copy; 2024 AttendEase. All rights reserved.</p>

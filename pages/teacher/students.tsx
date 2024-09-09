@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { FaUserEdit, FaUserMinus, FaPlus } from "react-icons/fa";
 
 const StudentList = () => {
-  // State for the list of students
+ 
   const [students, setStudents] = useState([
     {
       id: 1,
@@ -31,26 +31,23 @@ const StudentList = () => {
     },
   ]);
 
-  // State for new student form
+  
   const [newStudent, setNewStudent] = useState({
     name: "",
     email: "",
     class: "",
   });
 
-  // Function to handle removal of a student
   const handleRemoveStudent = (id) => {
     const filteredStudents = students.filter((student) => student.id !== id);
     setStudents(filteredStudents);
   };
 
-  // Function to handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewStudent({ ...newStudent, [name]: value });
   };
 
-  // Function to add a new student to the list
   const handleAddStudent = (e) => {
     e.preventDefault();
     if (newStudent.name && newStudent.email && newStudent.class) {
@@ -63,7 +60,7 @@ const StudentList = () => {
           class: newStudent.class,
         },
       ]);
-      setNewStudent({ name: "", email: "", class: "" }); // Reset form
+      setNewStudent({ name: "", email: "", class: "" }); 
     }
   };
 
@@ -72,7 +69,7 @@ const StudentList = () => {
       <div className="p-4 md:p-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Student List</h2>
 
-        {/* Form to add a new student */}
+        
         <form className="mb-6" onSubmit={handleAddStudent}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <input
@@ -111,8 +108,6 @@ const StudentList = () => {
             Add Student
           </button>
         </form>
-
-        {/* Student list table */}
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white rounded-lg shadow-md overflow-hidden">
             <thead>

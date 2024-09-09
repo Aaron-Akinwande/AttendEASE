@@ -15,7 +15,7 @@ const Dashboard = () => {
           <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            {/* Recent Classes */}
+            
             <div className="bg-blue-100 p-4 rounded-lg shadow-md">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
@@ -34,7 +34,7 @@ const Dashboard = () => {
               </ul>
             </div>
 
-            {/* Upcoming Lectures */}
+            
             <div className="bg-green-100 p-4 rounded-lg shadow-md">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
@@ -54,7 +54,7 @@ const Dashboard = () => {
               </ul>
             </div>
 
-            {/* Overall Attendance */}
+            
             <div className="bg-yellow-100 p-4 rounded-lg shadow-md">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
@@ -67,7 +67,7 @@ const Dashboard = () => {
               <p className="text-gray-600 mt-4">Attendance Rate: 85%</p>
             </div>
 
-            {/* Notifications */}
+
             <div className="bg-red-100 p-4 rounded-lg shadow-md">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
@@ -86,7 +86,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Footer */}
+
           <footer className="text-center text-gray-500 mt-6">
             &copy; 2024 AttendEase. All Rights Reserved.
           </footer>

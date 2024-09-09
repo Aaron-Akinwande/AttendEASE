@@ -32,7 +32,6 @@ const DashboardPage = () => {
           Student Dashboard
         </h1>
 
-        {/* Attendance Records Section */}
         <div className="mb-6 p-4 bg-white rounded-lg shadow-lg">
           <h2 className="text-2xl font-semibold text-gray-700 mb-4">
             Attendance Records
@@ -57,7 +56,6 @@ const DashboardPage = () => {
           </ul>
         </div>
 
-        {/* Upcoming Classes Section */}
         <div className="mb-6 p-4 bg-white rounded-lg shadow-lg">
           <h2 className="text-2xl font-semibold text-gray-700 mb-4">
             Upcoming Classes
@@ -80,7 +78,6 @@ const DashboardPage = () => {
           </ul>
         </div>
 
-        {/* Notifications Section */}
         <div className="p-4 bg-white rounded-lg shadow-lg">
           <h2 className="text-2xl font-semibold text-gray-700 mb-4">
             Notifications
