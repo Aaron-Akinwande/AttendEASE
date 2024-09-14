@@ -5,7 +5,7 @@ import { FaUser, FaLock } from 'react-icons/fa';
 export default function Login() {
 
     const router = useRouter()
-  const [userRole, setUserRole] = useState('student'); 
+  const [userRole, setUserRole] = useState('admin'); 
 
   const handleClick = () => {
     router.push(`/${userRole}`);
@@ -26,10 +26,10 @@ export default function Login() {
         
         <div className="flex justify-center mb-4">
           <button 
-            onClick={() => setUserRole('student')}
-            className={`px-4 py-2 rounded-l-md ${userRole === 'student' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+            onClick={() => setUserRole('admin')}
+            className={`px-4 py-2 rounded-l-md ${userRole === 'admin' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'}`}
           >
-            Student
+            Admin
           </button>
           <button 
             onClick={() => setUserRole('teacher')}

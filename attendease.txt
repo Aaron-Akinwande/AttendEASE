@@ -35,3 +35,43 @@ For the **Student Module** of the online barcode attendance system, the followin
 
 *5. **Support/Help Page**: A page where students can access help documentation, frequently asked questions (FAQs), and contact information for technical support or other inquiries related to the attendance system.
 
+
+ADMIN Module
+
+Admin Dashboard
+
+Overview of system stats (e.g., total students, lecturers, classes, etc.).
+Quick links to key actions like adding classes, viewing reports, and managing users.
+User Management
+
+Manage Students: A page to view, add, edit, and delete student profiles.
+Manage Lecturers: Similar to students but focused on managing lecturer profiles.
+Assign Roles: A page to assign or modify roles (e.g., student, lecturer, admin).
+Class Management
+
+View Classes: Display all classes with options to filter by subject, lecturer, or semester.
+Create Class: A form to add new classes and assign lecturers.
+Edit/Delete Class: Modify or remove class information.
+Assign Students: Assign or remove students from specific classes.
+Attendance Management
+
+View Attendance Records: A detailed view of student attendance per class or per student.
+Generate Reports: Export attendance reports based on time periods or specific classes.
+Mark/Override Attendance: Admins can manually mark or override attendance in special cases.
+Notifications Management
+
+Send Notifications: Send notifications to specific students, classes, or all users (for system-wide updates).
+View Notifications History: See all past notifications sent by the admin.
+Reports & Analytics
+
+Attendance Reports: Generate custom reports on student attendance, filtered by class, lecturer, or semester.
+User Activity Reports: View user login and activity history.
+Class Performance Reports: An overview of class performance metrics like attendance trends, highest/lowest attendance rates, etc.
+Settings
+
+System Settings: Adjust system-wide settings like attendance thresholds, notification preferences, etc.
+Account Settings: Manage the admin account details, passwords, and permissions.
+Feedback and Support
+
+View Feedback: Review feedback provided by students or lecturers.
+Contact Support: Admins can report issues or get in touch with the development team for technical support.
