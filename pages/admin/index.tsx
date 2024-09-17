@@ -52,27 +52,27 @@ const AdminDashboard = () => {
         {/* Quick Action Links */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <button
-            onClick={() => router.push("/admin/add-class")}
+            onClick={() => router.push("/admin/lecturers")}
             className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-lg flex items-center justify-center"
           >
             <FaPlusCircle size={24} className="mr-2" />
-            Add Class
+            Add Lecturer
           </button>
 
           <button
-            onClick={() => router.push("/admin/view-reports")}
+            onClick={() => router.push("/admin/notifications")}
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-6 rounded-lg flex items-center justify-center"
           >
             <FaFileAlt size={24} className="mr-2" />
-            View Reports
+            All Notifications
           </button>
 
           <button
-            onClick={() => router.push("/admin/manage-users")}
+            onClick={() => router.push("/admin/students")}
             className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-4 px-6 rounded-lg flex items-center justify-center"
           >
             <FaUserGraduate size={24} className="mr-2" />
-            Manage Users
+            Add Student
           </button>
         </div>
       </div>
