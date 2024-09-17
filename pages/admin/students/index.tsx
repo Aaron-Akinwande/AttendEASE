@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import AdminSidebar from '@/components/adminsidebar';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import AdminSidebar from "@/components/adminsidebar";
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterDept, setFilterDept] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterDept, setFilterDept] = useState("");
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newStudent, setNewStudent] = useState({
-    id: '',
-    name: '',
-    email: '',
-    department: '',
+    id: "",
+    name: "",
+    email: "",
+    department: "",
   });
 
   const router = useRouter();
@@ -20,10 +20,30 @@ const StudentList = () => {
   useEffect(() => {
     // Simulate fetching data from an API (replace with actual API call)
     const fetchedStudents = [
-      { id: 1, name: 'John Doe', email: 'john.doe@example.com', department: 'Mathematics' },
-      { id: 2, name: 'Jane Smith', email: 'jane.smith@example.com', department: 'Physics' },
-      { id: 3, name: 'Alice Brown', email: 'alice.brown@example.com', department: 'Chemistry' },
-      { id: 4, name: 'Robert Green', email: 'robert.green@example.com', department: 'Mathematics' },
+      {
+        id: 1,
+        name: "John Doe",
+        email: "john.doe@example.com",
+        department: "Mathematics",
+      },
+      {
+        id: 2,
+        name: "Jane Smith",
+        email: "jane.smith@example.com",
+        department: "Physics",
+      },
+      {
+        id: 3,
+        name: "Alice Brown",
+        email: "alice.brown@example.com",
+        department: "Chemistry",
+      },
+      {
+        id: 4,
+        name: "Robert Green",
+        email: "robert.green@example.com",
+        department: "Mathematics",
+      },
       // Add more students as needed
     ];
     setStudents(fetchedStudents);
@@ -34,7 +54,9 @@ const StudentList = () => {
     let filtered = students;
 
     if (filterDept) {
-      filtered = filtered.filter((student) => student.department === filterDept);
+      filtered = filtered.filter(
+        (student) => student.department === filterDept
+      );
     }
 
     if (searchTerm) {
@@ -57,7 +79,7 @@ const StudentList = () => {
     setStudents((prevStudents) => [...prevStudents, newStudent]);
     setFilteredStudents((prevStudents) => [...prevStudents, newStudent]);
     setShowAddForm(false);
-    setNewStudent({ id: '', name: '', email: '', department: '' });
+    setNewStudent({ id: "", name: "", email: "", department: "" });
   };
 
   const viewStudentDetails = (studentId) => {
@@ -164,8 +186,12 @@ const StudentList = () => {
                 <tr key={student.id} className="hover:bg-gray-100">
                   <td className="p-4 border border-gray-200">{student.id}</td>
                   <td className="p-4 border border-gray-200">{student.name}</td>
-                  <td className="p-4 border border-gray-200">{student.email}</td>
-                  <td className="p-4 border border-gray-200">{student.department}</td>
+                  <td className="p-4 border border-gray-200">
+                    {student.email}
+                  </td>
+                  <td className="p-4 border border-gray-200">
+                    {student.department}
+                  </td>
                   <td className="p-4 border border-gray-200">
                     <button
                       onClick={() => viewStudentDetails(student.id)}
@@ -178,7 +204,9 @@ const StudentList = () => {
               ))}
               {filteredStudents.length === 0 && (
                 <tr>
-                  <td colSpan="5" className="p-4 text-center text-gray-500">
+                  <td 
+                //   colSpan="5" 
+                  className="p-4 text-center text-gray-500">
                     No students found
                   </td>
                 </tr>

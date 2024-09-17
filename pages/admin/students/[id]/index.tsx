@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import AdminSidebar from '@/components/adminsidebar';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import AdminSidebar from "@/components/adminsidebar";
 
 const StudentDetail = () => {
   const router = useRouter();
@@ -8,7 +8,7 @@ const StudentDetail = () => {
 
   const [student, setStudent] = useState(null);
   const [courses, setCourses] = useState([]);
-  const [newCourse, setNewCourse] = useState({ name: '' });
+  const [newCourse, setNewCourse] = useState({ name: "" });
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
@@ -16,13 +16,13 @@ const StudentDetail = () => {
       // Fetch student data and their courses from an API (replace with real API calls)
       setStudent({
         id: id,
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        department: 'Mathematics',
+        name: "John Doe",
+        email: "john.doe@example.com",
+        department: "Mathematics",
       });
       setCourses([
-        { id: 1, name: 'Mathematics 101', studentsCount: 30, sessionsCount: 15 },
-        { id: 2, name: 'Advanced Calculus', studentsCount: 25, sessionsCount: 10 },
+        { id: 1, name: "Mathematics 101", percentage: "75%" },
+        { id: 2, name: "Advanced Calculus", percentage: "70%" },
       ]);
     }
   }, [id]);
@@ -34,9 +34,9 @@ const StudentDetail = () => {
   const handleAddCourse = () => {
     setCourses((prevCourses) => [
       ...prevCourses,
-      { id: prevCourses.length + 1, name: newCourse.name, studentsCount: 0, sessionsCount: 0 }
+      { id: prevCourses.length + 1, name: newCourse.name, percentage: 0 },
     ]);
-    setNewCourse({ name: '' });
+    setNewCourse({ name: "" });
   };
 
   const handleEditStudent = () => {
@@ -108,7 +108,9 @@ const StudentDetail = () => {
               </div>
             ) : (
               <div className="mb-6 p-4 border rounded bg-white shadow-lg">
-                <h2 className="text-xl font-semibold mb-4">Student Information</h2>
+                <h2 className="text-xl font-semibold mb-4">
+                  Student Information
+                </h2>
                 <div className="mb-4">
                   <strong>Name:</strong> {student.name}
                 </div>
@@ -148,22 +150,29 @@ const StudentDetail = () => {
                 <table className="min-w-full bg-white border-collapse border border-gray-200">
                   <thead>
                     <tr>
-                      <th className="p-4 border border-gray-200">Course Name</th>
-                      <th className="p-4 border border-gray-200">Total Students</th>
-                      <th className="p-4 border border-gray-200">Sessions Count</th>
+                      <th className="p-4 border border-gray-200">
+                        Course Name
+                      </th>
+                      <th className="p-4 border border-gray-200">Attendance Percentage</th>
                     </tr>
                   </thead>
                   <tbody>
                     {courses.map((course) => (
                       <tr key={course.id} className="hover:bg-gray-100">
-                        <td className="p-4 border border-gray-200">{course.name}</td>
-                        <td className="p-4 border border-gray-200">{course.studentsCount}</td>
-                        <td className="p-4 border border-gray-200">{course.sessionsCount}</td>
+                        <td className="p-4 border border-gray-200">
+                          {course.name}
+                        </td>
+                        <td className="p-4 border border-gray-200">
+                          {course.percentage}
+                        </td>
                       </tr>
                     ))}
                     {courses.length === 0 && (
                       <tr>
-                        <td colSpan="3" className="p-4 text-center text-gray-500">
+                        <td
+                        //   colSpan="3"
+                          className="p-4 text-center text-gray-500"
+                        >
                           No courses found
                         </td>
                       </tr>
