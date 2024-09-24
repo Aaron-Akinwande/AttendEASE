@@ -1,57 +1,37 @@
 import Sidebar from "@/components/sidebar";
 import React, { useState } from "react";
-import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
-import { useRouter } from "next/router"; 
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { useRouter } from "next/router";
 
 const ClassManagement = () => {
   const [classes, setClasses] = useState([
     { id: 1, name: "Computer Science 101", students: 30 },
     { id: 2, name: "Mathematics 201", students: 25 },
   ]);
-  const [newClassName, setNewClassName] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [currentClass, setCurrentClass] = useState(null);
 
   const router = useRouter();
 
-  const handleAddClass = () => {
-    if (newClassName.trim() === "") {
-      alert("Please enter a class name");
-      return;
-    }
-
-    const newClass = {
-      id: classes.length + 1,
-      name: newClassName,
-      students: 0,
-    };
-
-    setClasses([...classes, newClass]);
-    setNewClassName("");
-  };
-
   const handleEditClass = (classItem) => {
     setEditMode(true);
     setCurrentClass(classItem);
-    setNewClassName(classItem.name);
   };
 
   const handleUpdateClass = () => {
-    if (newClassName.trim() === "") {
-      alert("Please enter a class name");
+    if (!currentClass) {
       return;
     }
 
     const updatedClasses = classes.map((classItem) =>
       classItem.id === currentClass.id
-        ? { ...classItem, name: newClassName }
+        ? { ...classItem, name: currentClass.name }
         : classItem
     );
 
     setClasses(updatedClasses);
     setEditMode(false);
     setCurrentClass(null);
-    setNewClassName("");
   };
 
   const handleDeleteClass = (id) => {
@@ -60,7 +40,7 @@ const ClassManagement = () => {
   };
 
   const navigateToClassDetail = (classId) => {
-    router.push(`/teacher/classes/${classId}`); 
+    router.push(`/teacher/classes/${classId}`);
   };
 
   return (
@@ -70,36 +50,6 @@ const ClassManagement = () => {
           Class Management
         </h2>
 
-        
-        <div className="mb-6">
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">
-            {editMode ? "Edit Class" : "Add New Class"}
-          </h3>
-          <div className="flex items-center space-x-4">
-            <input
-              type="text"
-              className="border border-gray-300 rounded-md p-2 w-full md:w-64"
-              placeholder="Enter class name"
-              value={newClassName}
-              onChange={(e) => setNewClassName(e.target.value)}
-            />
-            <button
-              className={`${
-                editMode
-                  ? "bg-yellow-600 hover:bg-yellow-700"
-                  : "bg-blue-600 hover:bg-blue-700"
-              } text-white p-2 rounded-md transition-colors`}
-              onClick={editMode ? handleUpdateClass : handleAddClass}
-            >
-              {editMode ? (
-                <FaEdit className="inline mr-2" />
-              ) : (
-                <FaPlus className="inline mr-2" />
-              )}
-              {editMode ? "Update" : "Add"}
-            </button>
-          </div>
-        </div>
         <div>
           <h3 className="text-xl font-semibold text-gray-700 mb-2">
             Classes List
@@ -118,7 +68,7 @@ const ClassManagement = () => {
                 <tr
                   key={clsItem.id}
                   className="border-b border-gray-200 cursor-pointer"
-                  onClick={() => navigateToClassDetail(clsItem.id)} 
+                  onClick={() => navigateToClassDetail(clsItem.id)}
                 >
                   <td className="py-3 px-4">{clsItem.id}</td>
                   <td className="py-3 px-4">{clsItem.name}</td>

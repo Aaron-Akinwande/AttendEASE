@@ -6,6 +6,7 @@ import {
   FaUsers,
   FaFileAlt,
   FaChalkboardTeacher,
+  FaRegListAlt,
   FaSignOutAlt,
 } from "react-icons/fa";
 
@@ -53,6 +54,15 @@ const AdminSidebar = ({ children }) => {
               >
                 <FaChalkboardTeacher className="mr-3" />
                 <span>Manage Lecturers</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/admin/courses"
+                className="flex items-center text-gray-700 hover:text-blue-600"
+              >
+                <FaRegListAlt className="mr-3" />
+                <span>Manage Courses</span>
               </a>
             </li>
             <li>

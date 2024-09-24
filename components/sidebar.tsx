@@ -64,7 +64,7 @@ const Sidebar = ({ children }) => {
                 <span>Classes</span>
               </a>
             </li>
-            <li>
+            {/* <li>
               <a
                 href="/teacher/students"
                 className="flex items-center text-gray-700 hover:text-blue-600"
@@ -72,7 +72,7 @@ const Sidebar = ({ children }) => {
                 <FaUsers className="mr-3" />
                 <span>Students</span>
               </a>
-            </li>
+            </li> */}
             <li>
               <a
                 href="/teacher/profile"

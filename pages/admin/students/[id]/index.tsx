@@ -7,8 +7,9 @@ const StudentDetail = () => {
   const { id } = router.query;
 
   const [student, setStudent] = useState(null);
-  const [courses, setCourses] = useState([]);
-  const [newCourse, setNewCourse] = useState({ name: "" });
+  const [assignedCourses, setAssignedCourses] = useState([]);
+  const [availableCourses, setAvailableCourses] = useState([]); // Available courses to choose from
+  const [selectedCourseId, setSelectedCourseId] = useState(""); // Stores the selected course id
   const [editing, setEditing] = useState(false);
 
   useEffect(() => {
@@ -20,23 +21,35 @@ const StudentDetail = () => {
         email: "john.doe@example.com",
         department: "Mathematics",
       });
-      setCourses([
+      setAssignedCourses([
         { id: 1, name: "Mathematics 101", percentage: "75%" },
         { id: 2, name: "Advanced Calculus", percentage: "70%" },
+      ]);
+
+      // Fetch available courses from the server or mock data (replace with real API calls)
+      setAvailableCourses([
+        { id: 3, name: "Linear Algebra" },
+        { id: 4, name: "Statistics 101" },
+        { id: 5, name: "Physics for Engineers" },
       ]);
     }
   }, [id]);
 
   const handleCourseChange = (e) => {
-    setNewCourse({ name: e.target.value });
+    setSelectedCourseId(e.target.value); // Set selected course id from dropdown
   };
 
   const handleAddCourse = () => {
-    setCourses((prevCourses) => [
-      ...prevCourses,
-      { id: prevCourses.length + 1, name: newCourse.name, percentage: 0 },
-    ]);
-    setNewCourse({ name: "" });
+    const selectedCourse = availableCourses.find(
+      (course) => course.id === parseInt(selectedCourseId)
+    );
+    if (selectedCourse) {
+      setAssignedCourses((prevCourses) => [
+        ...prevCourses,
+        { ...selectedCourse, percentage: "0%" }, // Assigning selected course to student with 0% attendance initially
+      ]);
+      setSelectedCourseId(""); // Reset the dropdown after assignment
+    }
   };
 
   const handleEditStudent = () => {
@@ -132,32 +145,37 @@ const StudentDetail = () => {
             <h2 className="text-xl font-semibold mb-4">Courses Assigned</h2>
             <div className="mb-6 p-4 border rounded bg-white shadow-lg">
               <div className="flex mb-4">
-                <input
-                  type="text"
-                  value={newCourse.name}
+                <select
+                  value={selectedCourseId}
                   onChange={handleCourseChange}
-                  placeholder="New Course Name"
                   className="p-2 border border-gray-300 rounded flex-grow"
-                />
+                >
+                  <option value="">Select a Course</option>
+                  {availableCourses.map((course) => (
+                    <option key={course.id} value={course.id}>
+                      {course.name}
+                    </option>
+                  ))}
+                </select>
                 <button
                   onClick={handleAddCourse}
                   className="bg-green-500 text-white px-4 py-2 rounded ml-4"
                 >
-                  Add Course
+                  Assign Course
                 </button>
               </div>
               <div className="overflow-x-auto">
                 <table className="min-w-full bg-white border-collapse border border-gray-200">
                   <thead>
                     <tr>
+                      <th className="p-4 border border-gray-200">Course Name</th>
                       <th className="p-4 border border-gray-200">
-                        Course Name
+                        Attendance Percentage
                       </th>
-                      <th className="p-4 border border-gray-200">Attendance Percentage</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {courses.map((course) => (
+                    {assignedCourses.map((course) => (
                       <tr key={course.id} className="hover:bg-gray-100">
                         <td className="p-4 border border-gray-200">
                           {course.name}
@@ -167,13 +185,10 @@ const StudentDetail = () => {
                         </td>
                       </tr>
                     ))}
-                    {courses.length === 0 && (
+                    {assignedCourses.length === 0 && (
                       <tr>
-                        <td
-                        //   colSpan="3"
-                          className="p-4 text-center text-gray-500"
-                        >
-                          No courses found
+                        <td className="p-4 text-center text-gray-500" colSpan="2">
+                          No courses assigned
                         </td>
                       </tr>
                     )}

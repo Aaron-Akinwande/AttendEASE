@@ -75,3 +75,62 @@ Feedback and Support
 
 View Feedback: Review feedback provided by students or lecturers.
 Contact Support: Admins can report issues or get in touch with the development team for technical support.
+
+
+
+
+---Student table
+ID
+Student Matric
+First name
+Last name
+Full name{First name + Last Name}
+Email
+Phone number
+Password{Initial Value:Last Name, New Value:Changeable}
+Array of courses offered[
+Course ID
+Course Name
+Course Lecturer
+Total Number of sessions
+Total Number of sessions Attended
+Attendance Percentage{ (Total Number of sessions Attended \ Total Number of sessions) * 100 }
+]
+
+---Lecturer Table
+
+ID
+First name
+Last name
+Full name{First name + Last Name}
+Email
+Phone number
+Password{Initial Value:Last Name, New Value:Changeable}
+Array of courses taught[
+Course ID
+Course Name
+Total Number of sessions
+Array of students in the course
+]
+
+---Course/Class Table
+
+Course ID
+Course Name
+Course Lecturer
+Array of students
+Total Number of sessions
+
+
+---Admin Table
+
+ID
+First name
+Last name
+Full name{First name + Last Name}
+Email
+Phone number
+Password{Initial Value:Last Name, New Value:Changeable}
+Array of all lecturers
+Array of all courses/classes
+Array of all students 
