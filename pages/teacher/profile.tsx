@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import Sidebar from "@/components/sidebar";
-import { FaUser, FaEnvelope, FaPhone, FaLock } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaPhone, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState({
     name: "John Doe",
     email: "johndoe@example.com",
     phone: "123-456-7890",
-    password: "",
+    password: "12345678",
   });
 
   const [editing, setEditing] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // State to track password visibility
 
   const handleChange = (e) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
@@ -21,9 +22,13 @@ const ProfilePage = () => {
     setEditing(false);
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <Sidebar>
-      <div className="p-4 sm:p-6  min-h-screen">
+      <div className="p-4 sm:p-6 min-h-screen">
         <h1 className="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-4 sm:mb-6">
           Profile
         </h1>
@@ -81,20 +86,25 @@ const ProfilePage = () => {
               />
             </div>
 
-            {editing && (
-              <div className="mb-4">
-                <label className="block text-gray-700 font-semibold mb-2">
-                  <FaLock className="inline mr-2" /> Password
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  value={profile.password}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded bg-white"
-                />
-              </div>
-            )}
+            <div className="mb-4 relative">
+              <label className="block text-gray-700 font-semibold mb-2">
+                <FaLock className="inline mr-2" /> Password
+              </label>
+              <input
+                type={showPassword ? "text" : "password"} // Toggle between text and password
+                name="password"
+                value={profile.password}
+                onChange={handleChange}
+                className="w-full p-2 border rounded bg-white"
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute right-2 pt-4 text-gray-600"
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
 
             <div className="flex justify-end">
               {editing ? (

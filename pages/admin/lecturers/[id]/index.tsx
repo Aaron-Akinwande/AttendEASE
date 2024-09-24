@@ -7,40 +7,45 @@ const LecturerClasses = () => {
   const { id } = router.query;
 
   const [lecturer, setLecturer] = useState(null);
-  const [classes, setClasses] = useState([]);
-  const [newCourse, setNewCourse] = useState({
-    className: '',
-    students: 0,
-    sessions: 0,
-  });
+  const [assignedClasses, setAssignedClasses] = useState([]);
+  const [availableCourses, setAvailableCourses] = useState([]); // List of available courses
+  const [selectedCourseId, setSelectedCourseId] = useState(''); // Stores the selected course ID
 
   useEffect(() => {
-    // Fetch lecturer data and their classes from an API (replace with real API calls)
     if (id) {
+      // Fetch lecturer data and their classes from an API (replace with real API calls)
       setLecturer({
         id: id,
         name: 'Dr. John Doe',
         department: 'Mathematics'
       });
-      setClasses([
+
+      // Pre-assigned classes (replace with real API calls)
+      setAssignedClasses([
         { id: 1, className: 'Mathematics 101', students: 50, sessions: 10 },
         { id: 2, className: 'Advanced Calculus', students: 35, sessions: 12 },
+      ]);
+
+      // Available courses for assignment (replace with real API call)
+      setAvailableCourses([
+        { id: 3, className: 'Linear Algebra', students: 40, sessions: 8 },
+        { id: 4, className: 'Statistics 101', students: 45, sessions: 9 },
+        { id: 5, className: 'Physics for Engineers', students: 60, sessions: 7 },
       ]);
     }
   }, [id]);
 
-  const handleInputChange = (e) => {
-    setNewCourse({
-      ...newCourse,
-      [e.target.name]: e.target.value,
-    });
+  const handleCourseChange = (e) => {
+    setSelectedCourseId(e.target.value); // Set the selected course ID from the dropdown
   };
 
-  const handleAddCourse = () => {
-    // Add a new course (In a real scenario, you would send this data to the backend)
-    const newId = classes.length + 1;
-    setClasses([...classes, { id: newId, ...newCourse }]);
-    setNewCourse({ className: '', students: 0, sessions: 0 });
+  const handleAssignCourse = () => {
+    // Find the selected course from the available courses
+    const selectedCourse = availableCourses.find(course => course.id === parseInt(selectedCourseId));
+    if (selectedCourse) {
+      setAssignedClasses(prevClasses => [...prevClasses, selectedCourse]);
+      setSelectedCourseId(''); // Reset the dropdown after assignment
+    }
   };
 
   return (
@@ -61,7 +66,7 @@ const LecturerClasses = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {classes.map((classItem) => (
+                  {assignedClasses.map((classItem) => (
                     <tr key={classItem.id} className="hover:bg-gray-100">
                       <td className="p-4 border border-gray-200">
                         {classItem.className}
@@ -78,40 +83,28 @@ const LecturerClasses = () => {
               </table>
             </div>
 
-            {/* Form to add a new course */}
+            {/* Form to assign a new course */}
             <div className="mt-8 bg-white p-6 shadow-lg rounded-lg">
-              <h2 className="text-xl font-bold mb-4">Add New Course</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  name="className"
-                  value={newCourse.className}
-                  onChange={handleInputChange}
-                  placeholder="Course Name"
+              <h2 className="text-xl font-bold mb-4">Assign New Course</h2>
+              <div className="grid grid-cols-1 gap-4">
+                <select
+                  value={selectedCourseId}
+                  onChange={handleCourseChange}
                   className="p-2 border border-gray-300 rounded"
-                />
-                <input
-                  type="number"
-                  name="students"
-                  value={newCourse.students}
-                  onChange={handleInputChange}
-                  placeholder="Total Students"
-                  className="p-2 border border-gray-300 rounded"
-                />
-                <input
-                  type="number"
-                  name="sessions"
-                  value={newCourse.sessions}
-                  onChange={handleInputChange}
-                  placeholder="Class Sessions Undertaken"
-                  className="p-2 border border-gray-300 rounded"
-                />
+                >
+                  <option value="">Select a Course</option>
+                  {availableCourses.map((course) => (
+                    <option key={course.id} value={course.id}>
+                      {course.className}
+                    </option>
+                  ))}
+                </select>
               </div>
               <button
-                onClick={handleAddCourse}
+                onClick={handleAssignCourse}
                 className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
               >
-                Add Course
+                Assign Course
               </button>
             </div>
           </div>
