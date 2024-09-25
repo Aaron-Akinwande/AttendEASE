@@ -1,6 +1,10 @@
+import { getRequest } from "@/api/apiCall";
+import { ADMIN } from "@/api/apiURL";
+import { queryKeys } from "@/api/queryKey";
 import AdminSidebar from "@/components/adminsidebar";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaUserGraduate,
   FaChalkboardTeacher,
@@ -11,12 +15,26 @@ import {
 
 const AdminDashboard = () => {
   const router = useRouter();
+  const uid: any = typeof window !== 'undefined' && localStorage.getItem("admin_token");
 
-  const stats = {
-    students: 1200,
-    lecturers: 45,
-    classes: 85,
-  };
+  const [students, setStudents] = useState([]);
+  const [lecturers, setLecturers] = useState([]);
+  const [courses, setCourses] = useState([]);
+
+  // Fetching admin data using react-query
+  const { data: adminData, isSuccess } = useQuery({
+    queryKey: [queryKeys.getAdmin, uid],
+    queryFn: async () => await getRequest({ url: ADMIN(uid) }),
+    enabled: !!uid, // Ensures the query only runs if `uid` is available
+  });
+
+  useEffect(() => {
+    if (isSuccess && adminData) {
+      setStudents(adminData.students || []);
+      setLecturers(adminData.lecturers || []);
+      setCourses(adminData.courses || []);
+    }
+  }, [adminData, isSuccess]);
 
   return (
     <AdminSidebar>
@@ -29,7 +47,7 @@ const AdminDashboard = () => {
           {/* Stat Cards */}
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
             <FaUserGraduate size={40} className="mx-auto text-blue-500 mb-4" />
-            <h2 className="text-2xl font-bold">{stats.students}</h2>
+            <h2 className="text-2xl font-bold">{students.length}</h2>
             <p className="text-gray-600">Total Students</p>
           </div>
 
@@ -38,13 +56,13 @@ const AdminDashboard = () => {
               size={40}
               className="mx-auto text-blue-500 mb-4"
             />
-            <h2 className="text-2xl font-bold">{stats.lecturers}</h2>
+            <h2 className="text-2xl font-bold">{lecturers.length}</h2>
             <p className="text-gray-600">Total Lecturers</p>
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow-md text-center">
             <FaBook size={40} className="mx-auto text-blue-500 mb-4" />
-            <h2 className="text-2xl font-bold">{stats.classes}</h2>
+            <h2 className="text-2xl font-bold">{courses.length}</h2>
             <p className="text-gray-600">Total Classes</p>
           </div>
         </div>

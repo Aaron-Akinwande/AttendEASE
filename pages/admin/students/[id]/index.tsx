@@ -1,54 +1,86 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AdminSidebar from "@/components/adminsidebar";
+import { getRequest, patchRequest } from "@/api/apiCall"; // Assume these are defined in your apiCall file
+import { STUDENT, GET_COURSES } from "@/api/apiURL"; // Add appropriate API URLs
+import { queryKeys } from "@/api/queryKey"; // Adjust this according to your query key definitions
 
 const StudentDetail = () => {
   const router = useRouter();
   const { id } = router.query;
+  const uid = typeof window !== "undefined" && localStorage.getItem("admin_token");
+
+  const queryClient = useQueryClient();
 
   const [student, setStudent] = useState(null);
   const [assignedCourses, setAssignedCourses] = useState([]);
-  const [availableCourses, setAvailableCourses] = useState([]); // Available courses to choose from
-  const [selectedCourseId, setSelectedCourseId] = useState(""); // Stores the selected course id
+  const [availableCourses, setAvailableCourses] = useState([]);
+  const [selectedCourseId, setSelectedCourseId] = useState("");
   const [editing, setEditing] = useState(false);
 
-  useEffect(() => {
-    if (id) {
-      // Fetch student data and their courses from an API (replace with real API calls)
-      setStudent({
-        id: id,
-        name: "John Doe",
-        email: "john.doe@example.com",
-        department: "Mathematics",
-      });
-      setAssignedCourses([
-        { id: 1, name: "Mathematics 101", percentage: "75%" },
-        { id: 2, name: "Advanced Calculus", percentage: "70%" },
-      ]);
+  // Fetch student data
+  const { data: studentData, isLoading: loadingStudent } = useQuery({
+    queryKey: [queryKeys.getstudent, uid, id],
+    queryFn: () => getRequest({ url: STUDENT(uid, id) }),
+    enabled: !!id,
+  });
 
-      // Fetch available courses from the server or mock data (replace with real API calls)
-      setAvailableCourses([
-        { id: 3, name: "Linear Algebra" },
-        { id: 4, name: "Statistics 101" },
-        { id: 5, name: "Physics for Engineers" },
-      ]);
+  // Fetch available courses
+  const { data: courseData } = useQuery({
+    queryKey: [queryKeys.getCourses],
+    queryFn: () => getRequest({ url: GET_COURSES(uid) }),
+  });
+
+  const { mutate: editStudent } = useMutation({
+    mutationFn: async (updatedStudent) => {
+      await patchRequest({ url: STUDENT(uid, id), data: updatedStudent });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [queryKeys.getstudent] });
+      setEditing(false);
+    },
+  });
+
+  const { mutate: assignCourse } = useMutation({
+    mutationFn: async (newCourse) => {
+      // Add the new course to the student's list of courses
+      const updatedCourses = [...assignedCourses, newCourse];
+      await patchRequest({
+        url: STUDENT(uid, id),
+        data: { courses: updatedCourses },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [queryKeys.getstudent, uid, id] });
+    },
+  });
+
+  useEffect(() => {
+    if (studentData) {
+      setStudent(studentData);
+      setAssignedCourses(studentData.courses || []);
     }
-  }, [id]);
+  }, [studentData]);
+
+  useEffect(() => {
+    if (courseData) {
+      setAvailableCourses(courseData);
+    }
+  }, [courseData]);
 
   const handleCourseChange = (e) => {
-    setSelectedCourseId(e.target.value); // Set selected course id from dropdown
+    setSelectedCourseId(e.target.value);
   };
 
   const handleAddCourse = () => {
     const selectedCourse = availableCourses.find(
-      (course) => course.id === parseInt(selectedCourseId)
+      (course) => course.courseId === parseInt(selectedCourseId)
     );
     if (selectedCourse) {
-      setAssignedCourses((prevCourses) => [
-        ...prevCourses,
-        { ...selectedCourse, percentage: "0%" }, // Assigning selected course to student with 0% attendance initially
-      ]);
-      setSelectedCourseId(""); // Reset the dropdown after assignment
+      // Trigger the mutation to assign the course to the student
+      assignCourse({ ...selectedCourse, attendancePercentage: "0%" });
+      setSelectedCourseId("");
     }
   };
 
@@ -62,9 +94,12 @@ const StudentDetail = () => {
   };
 
   const handleSaveStudent = () => {
-    // Save student data (replace with real API call)
-    setEditing(false);
+    editStudent(student);
   };
+
+  if (loadingStudent) {
+    return <AdminSidebar>Loading student data...</AdminSidebar>;
+  }
 
   return (
     <AdminSidebar>
@@ -77,11 +112,21 @@ const StudentDetail = () => {
               <div className="mb-6 p-4 border rounded bg-white shadow-lg">
                 <h2 className="text-xl font-semibold mb-4">Edit Student</h2>
                 <div className="flex flex-col mb-4">
-                  <label className="mb-2 font-medium">Name:</label>
+                  <label className="mb-2 font-medium">First Name:</label>
                   <input
                     type="text"
-                    name="name"
-                    value={student.name}
+                    name="firstName"
+                    value={student.firstName}
+                    onChange={handleInputChange}
+                    className="p-2 border border-gray-300 rounded"
+                  />
+                </div>
+                <div className="flex flex-col mb-4">
+                  <label className="mb-2 font-medium">Last Name:</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={student.lastName}
                     onChange={handleInputChange}
                     className="p-2 border border-gray-300 rounded"
                   />
@@ -92,6 +137,16 @@ const StudentDetail = () => {
                     type="email"
                     name="email"
                     value={student.email}
+                    onChange={handleInputChange}
+                    className="p-2 border border-gray-300 rounded"
+                  />
+                </div>
+                <div className="flex flex-col mb-4">
+                  <label className="mb-2 font-medium">Phone Number:</label>
+                  <input
+                    type="text"
+                    name="phoneNumber"
+                    value={student.phoneNumber}
                     onChange={handleInputChange}
                     className="p-2 border border-gray-300 rounded"
                   />
@@ -121,14 +176,18 @@ const StudentDetail = () => {
               </div>
             ) : (
               <div className="mb-6 p-4 border rounded bg-white shadow-lg">
-                <h2 className="text-xl font-semibold mb-4">
-                  Student Information
-                </h2>
+                <h2 className="text-xl font-semibold mb-4">Student Information</h2>
                 <div className="mb-4">
-                  <strong>Name:</strong> {student.name}
+                  <strong>First Name:</strong> {student.firstName}
+                </div>
+                <div className="mb-4">
+                  <strong>Last Name:</strong> {student.lastName}
                 </div>
                 <div className="mb-4">
                   <strong>Email:</strong> {student.email}
+                </div>
+                <div className="mb-4">
+                  <strong>Phone Number:</strong> {student.phoneNumber}
                 </div>
                 <div className="mb-4">
                   <strong>Department:</strong> {student.department}
@@ -152,8 +211,8 @@ const StudentDetail = () => {
                 >
                   <option value="">Select a Course</option>
                   {availableCourses.map((course) => (
-                    <option key={course.id} value={course.id}>
-                      {course.name}
+                    <option key={course.courseId} value={course.courseId}>
+                      {course.courseName}
                     </option>
                   ))}
                 </select>
@@ -169,25 +228,19 @@ const StudentDetail = () => {
                   <thead>
                     <tr>
                       <th className="p-4 border border-gray-200">Course Name</th>
-                      <th className="p-4 border border-gray-200">
-                        Attendance Percentage
-                      </th>
+                      <th className="p-4 border border-gray-200">Attendance Percentage</th>
                     </tr>
                   </thead>
                   <tbody>
                     {assignedCourses.map((course) => (
                       <tr key={course.id} className="hover:bg-gray-100">
-                        <td className="p-4 border border-gray-200">
-                          {course.name}
-                        </td>
-                        <td className="p-4 border border-gray-200">
-                          {course.percentage}
-                        </td>
+                        <td className="p-4 border border-gray-200">{course.courseName}</td>
+                        <td className="p-4 border border-gray-200">{course.attendancePercentage}</td>
                       </tr>
                     ))}
                     {assignedCourses.length === 0 && (
                       <tr>
-                        <td className="p-4 text-center text-gray-500" colSpan="2">
+                        <td className="p-4 text-center text-gray-500">
                           No courses assigned
                         </td>
                       </tr>

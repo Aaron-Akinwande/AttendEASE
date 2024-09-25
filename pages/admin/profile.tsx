@@ -1,29 +1,104 @@
-import React, { useState } from "react";
-import AdminSidebar from '@/components/adminsidebar';
-import { FaUser, FaEnvelope, FaPhone, FaLock } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import AdminSidebar from "@/components/adminsidebar";
+import {
+  FaUser,
+  FaEnvelope,
+  FaPhone,
+  FaLock,
+  FaEye,
+  FaEyeSlash,
+} from "react-icons/fa";
+import axios from "axios"; // Assuming axios is used for HTTP requests
+import { queryKeys } from "@/api/queryKey";
+import { getRequest, patchRequest } from "@/api/apiCall";
+import { ADMIN } from "@/api/apiURL";
 
 const ProfilePage = () => {
+  const uid: any =
+    typeof window !== "undefined" && localStorage.getItem("admin_token");
+  const queryClient = useQueryClient();
+
+ 
+  const {
+    data: profileData,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: [queryKeys.getAdmin, uid],
+    queryFn: async () => await getRequest({ url: ADMIN(uid) }),
+    enabled: !!uid,
+  });
+
+  const { mutate: editAdmin, isPending } = useMutation({
+    mutationFn: async (edit: any) => {
+      await patchRequest({ url: ADMIN(uid), data: edit });
+    },
+    onSuccess: () => {
+      console.log("Admin Editted");
+      setEditing(false);
+      queryClient.refetchQueries({ queryKey: [queryKeys.getAdmin] });
+    },
+    onError: (error) => {
+      console.error("Error editing admin:", error);
+    },
+  });
+
   const [profile, setProfile] = useState({
-    name: "John Doe",
-    email: "johndoe@example.com",
-    phone: "123-456-7890",
+    name: "",
+    email: "",
+    phone: "",
     password: "",
   });
 
   const [editing, setEditing] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); 
+
+  useEffect(() => {
+    if (profileData) {
+      setProfile({
+        name: profileData.fullName,
+        email: profileData.email,
+        phone: profileData.phoneNumber,
+        password: profile.password, 
+      });
+    }
+  }, [profileData]);
 
   const handleChange = (e) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
   const handleSave = () => {
-    console.log("Profile saved:", profile);
-    setEditing(false);
+    const updatedProfile = {
+      fullName: profile.name,
+      email: profile.email,
+      phoneNumber: profile.phone,
+      password: profile.password ? profile.password : undefined, 
+    };
+
+    editAdmin(updatedProfile);
   };
+
+  if (isLoading) {
+    return (
+      <AdminSidebar>
+        <div className="p-6 min-h-screen">Loading...</div>
+      </AdminSidebar>
+    );
+  }
+
+  if (isError) {
+    return (
+      <AdminSidebar>
+        <div className="p-6 min-h-screen">Error loading profile.</div>
+      </AdminSidebar>
+    );
+  }
 
   return (
     <AdminSidebar>
-      <div className="p-4 sm:p-6  min-h-screen">
+      <div className="p-4 sm:p-6 min-h-screen">
         <h1 className="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-4 sm:mb-6">
           Profile
         </h1>
@@ -82,17 +157,26 @@ const ProfilePage = () => {
             </div>
 
             {editing && (
-              <div className="mb-4">
-                <label className="block text-gray-700 font-semibold mb-2">
-                  <FaLock className="inline mr-2" /> Password
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  value={profile.password}
-                  onChange={handleChange}
-                  className="w-full p-2 border rounded bg-white"
-                />
+              <div className="mb-4  flex flex-col w-full ">
+                  <label className="block text-gray-700 font-semibold mb-2">
+                    <FaLock className="inline mr-2" /> Password
+                  </label>
+                <div className="flex">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={profile.password}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded bg-white"
+                  />
+                <button
+                  type="button"
+                  className=" p-3 text-gray-500"
+                  onClick={() => setShowPassword(!showPassword)} 
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+                </div>
               </div>
             )}
 
@@ -102,8 +186,9 @@ const ProfilePage = () => {
                   type="button"
                   className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded mr-2"
                   onClick={handleSave}
+                  disabled={isPending}
                 >
-                  Save
+                  {isPending ? "Saving..." : "Save"}
                 </button>
               ) : (
                 <button

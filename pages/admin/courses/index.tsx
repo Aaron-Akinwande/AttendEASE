@@ -1,36 +1,74 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import AdminSidebar from '@/components/adminsidebar';
+import { getRequest, postRequest } from '@/api/apiCall';
+import { GET_COURSES, LECTURERS } from '@/api/apiURL'; // Define your API endpoints here
+import { queryKeys } from '@/api/queryKey';
 
 const CoursesList = () => {
   const router = useRouter();
+  const queryClient = useQueryClient(); 
 
- 
-  const [courses, setCourses] = useState([
-    { courseId: 1, courseName: 'Mathematics 101', courseLecturer: 'Dr. John Doe', totalSessions: 10 },
-    { courseId: 2, courseName: 'Physics 202', courseLecturer: 'Prof. Jane Smith', totalSessions: 12 },
-    { courseId: 3, courseName: 'Chemistry 303', courseLecturer: 'Dr. Alice Brown', totalSessions: 8 },
-  ]);
+  const uid: any =
+  typeof window !== "undefined" && localStorage.getItem("admin_token");
 
- 
-  const [lecturers, setLecturers] = useState([
-    { id: 1, name: 'Dr. John Doe' },
-    { id: 2, name: 'Prof. Jane Smith' },
-    { id: 3, name: 'Dr. Alice Brown' },
-    { id: 4, name: 'Prof. Mark White' }
-  ]);
+  const [courses, setcourses] = useState([])
 
   
+  // Fetch courses from the API
+  const { data: coursesData, isLoading: coursesLoading, isError: coursesError } = useQuery({
+    queryKey: [queryKeys.getCourses, uid], 
+    queryFn: async () => await getRequest({ url: GET_COURSES(uid) }),
+    
+    enabled: !!uid, 
+  }
+  
+);
+
+useEffect(() => {
+  if (coursesData) {
+    setcourses(coursesData); 
+  }
+  console.log(coursesData)
+}, [coursesData]);
+
+  // Fetch lecturers from the API
+  const { data: lecturersData, isLoading: lecturersLoading, isError: lecturersError } = useQuery({
+    queryKey: [queryKeys.getLecturers, uid], 
+    queryFn: async () => await getRequest({ url: LECTURERS( uid) }),
+    
+      enabled: !!uid, 
+  }  
+  );
+
+  // Local state to manage new course input
   const [newCourse, setNewCourse] = useState({
     courseName: '',
     courseLecturer: '',
     totalSessions: ''
   });
 
+  // Mutation to add a new course
+  const addCourseMutation = useMutation({
+    mutationFn: async (newCourse: any) => {
+      await postRequest({ url: GET_COURSES(uid), data: newCourse });
+    },
+    onSuccess: (data) => {
+      console.log("Course Added" );
+      queryClient.refetchQueries({ queryKey: [queryKeys.getCourses] })
+    },
+    onError: (error) => {
+      console.error("Error adding lecturer:", error);
+    },
+  });
+
+  // Handle row click to navigate to course details
   const handleRowClick = (courseId) => {
-    router.push(`/admin/courses/${courseId}`); 
+    router.push(`/admin/courses/${courseId}`);
   };
 
+  // Handle input changes for the new course form
   const handleInputChange = (e) => {
     setNewCourse({
       ...newCourse,
@@ -38,18 +76,29 @@ const CoursesList = () => {
     });
   };
 
+  // Handle adding a new course
   const handleAddCourse = () => {
-    const id = courses.length + 1;
-    setCourses([...courses, { ...newCourse, courseId: id, totalSessions: parseInt(newCourse.totalSessions) }]);
-    setNewCourse({ courseName: '', courseLecturer: '', totalSessions: '' });
+    addCourseMutation.mutate(newCourse, {
+      onSuccess: () => {
+        setNewCourse({ courseName: '', courseLecturer: '', totalSessions: '' });
+      }
+    });
   };
+
+  if (coursesLoading || lecturersLoading) {
+    return <AdminSidebar>Loading data...</AdminSidebar>;
+  }
+
+  if (coursesError || lecturersError) {
+    return <AdminSidebar>Error fetching data</AdminSidebar>;
+  }
 
   return (
     <AdminSidebar>
       <div className="p-6 bg-gray-100 min-h-screen">
         <h1 className="text-2xl font-bold mb-6 text-center">Courses List</h1>
 
-       
+        {/* Display courses */}
         <div className="overflow-x-auto shadow-lg">
           <table className="min-w-full bg-white border-collapse border border-gray-200">
             <thead>
@@ -60,7 +109,7 @@ const CoursesList = () => {
               </tr>
             </thead>
             <tbody>
-              {courses.map((course) => (
+              {courses?.map((course) => (
                 <tr
                   key={course.courseId}
                   className="cursor-pointer hover:bg-gray-100"
@@ -96,9 +145,9 @@ const CoursesList = () => {
               className="p-2 border border-gray-300 rounded"
             >
               <option value="">Select a Lecturer</option>
-              {lecturers.map((lecturer) => (
-                <option key={lecturer.id} value={lecturer.name}>
-                  {lecturer.name}
+              {lecturersData?.map((lecturer) => (
+                <option key={lecturer.id} value={lecturer.fullName}>
+                  {lecturer.fullName}
                 </option>
               ))}
             </select>
