@@ -1,114 +1,161 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import AdminSidebar from '@/components/adminsidebar';
+import { getRequest, patchRequest, postRequest } from '@/api/apiCall'; // Function to make GET requests
+import { GET_COURSES, LECTURER } from '@/api/apiURL'; // API endpoint for fetching a single lecturer
+import { queryKeys } from '@/api/queryKey';
 
 const LecturerClasses = () => {
+
+  // Not et aaron: assign course function is not complete
   const router = useRouter();
+  const queryClient = useQueryClient(); 
+
   const { id } = router.query;
 
-  const [lecturer, setLecturer] = useState(null);
-  const [assignedClasses, setAssignedClasses] = useState([]);
-  const [availableCourses, setAvailableCourses] = useState([]); // List of available courses
-  const [selectedCourseId, setSelectedCourseId] = useState(''); // Stores the selected course ID
+  
+  const uid: any =
+    typeof window !== "undefined" && localStorage.getItem("admin_token");
+
+  
+  const { data: lecturerData, isLoading, isError } = useQuery({
+
+    queryKey: [queryKeys.getLecturer, uid, id], 
+    queryFn: async () => await getRequest({ url: LECTURER( uid, id) }),
+    
+      enabled: !!id, 
+    }
+  );
+
+  const [lecturer, setLecturer] = useState({ coursesTaught: [] });
 
   useEffect(() => {
-    if (id) {
-      // Fetch lecturer data and their classes from an API (replace with real API calls)
-      setLecturer({
-        id: id,
-        name: 'Dr. John Doe',
-        department: 'Mathematics'
-      });
-
-      // Pre-assigned classes (replace with real API calls)
-      setAssignedClasses([
-        { id: 1, className: 'Mathematics 101', students: 50, sessions: 10 },
-        { id: 2, className: 'Advanced Calculus', students: 35, sessions: 12 },
-      ]);
-
-      // Available courses for assignment (replace with real API call)
-      setAvailableCourses([
-        { id: 3, className: 'Linear Algebra', students: 40, sessions: 8 },
-        { id: 4, className: 'Statistics 101', students: 45, sessions: 9 },
-        { id: 5, className: 'Physics for Engineers', students: 60, sessions: 7 },
-      ]);
+    if (lecturerData) {
+      setLecturer(lecturerData); 
     }
-  }, [id]);
+    console.log(lecturerData)
+  }, [lecturerData]);
+
+  const [availableCourses, setAvailableCourses] = useState([]); 
+  const [selectedCourseId, setSelectedCourseId] = useState(''); 
+
+  
+  const { data: courseData, isLoading: courseFetching } = useQuery({
+
+    queryKey: [queryKeys.getCourses, uid], 
+    queryFn: async () => await getRequest({ url: GET_COURSES( uid ) }),
+      enabled: !!uid, 
+    }
+  );
+
+  const { mutate: editLecturer } = useMutation({
+    mutationFn: async (newLect: any) => {
+      await patchRequest({ url: LECTURER(uid,id), data: newLect });
+    },
+    onSuccess: (data) => {
+      console.log("Lecturer Editted and Course Assigned" );
+      queryClient.refetchQueries({ queryKey: [queryKeys.getLecturer] })
+    },
+    onError: (error) => {
+      console.error("Error adding lecturer:", error);
+    },
+  });
+
+  useEffect(() => {
+    if (courseData) {
+      setAvailableCourses(courseData);
+    }
+    console.log(courseData)
+  }, [courseData]);
 
   const handleCourseChange = (e) => {
-    setSelectedCourseId(e.target.value); // Set the selected course ID from the dropdown
+    setSelectedCourseId(e.target.value); 
   };
 
   const handleAssignCourse = () => {
-    // Find the selected course from the available courses
-    const selectedCourse = availableCourses.find(course => course.id === parseInt(selectedCourseId));
+    const selectedCourse = availableCourses.find(
+      (course) => course.courseId === parseInt(selectedCourseId)
+    );
     if (selectedCourse) {
-      setAssignedClasses(prevClasses => [...prevClasses, selectedCourse]);
-      setSelectedCourseId(''); // Reset the dropdown after assignment
+      setLecturer((prevData) => ({
+        ...prevData,
+        coursesTaught: [...prevData.coursesTaught, selectedCourse],
+      }));
+      setSelectedCourseId(''); 
     }
   };
+  
+ 
+  useEffect(() => {
+    if (availableCourses.length > 0) {
+      editLecturer(lecturer);
+    }
+    console.log(lecturer)
+  }, [lecturer]);
+
+  
+
+
+
+  
+  if (isLoading) {
+    return <AdminSidebar>Loading lecturer data...</AdminSidebar>;
+  }
+
+  if (isError || !lecturerData) {
+    return <AdminSidebar>Error fetching lecturer data</AdminSidebar>;
+  }
 
   return (
     <AdminSidebar>
       <div className="p-6 bg-gray-100 min-h-screen">
-        {lecturer && (
-          <div>
-            <h1 className="text-2xl font-bold mb-6">
-              {lecturer.name}'s Classes
-            </h1>
-            <div className="overflow-x-auto shadow-lg">
-              <table className="min-w-full bg-white border-collapse border border-gray-200">
-                <thead>
-                  <tr>
-                    <th className="p-4 border border-gray-200">Class Name</th>
-                    <th className="p-4 border border-gray-200">Total Students</th>
-                    <th className="p-4 border border-gray-200">Sessions Undertaken</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {assignedClasses.map((classItem) => (
-                    <tr key={classItem.id} className="hover:bg-gray-100">
-                      <td className="p-4 border border-gray-200">
-                        {classItem.className}
-                      </td>
-                      <td className="p-4 border border-gray-200">
-                        {classItem.students}
-                      </td>
-                      <td className="p-4 border border-gray-200">
-                        {classItem.sessions}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+        <h1 className="text-2xl font-bold mb-6">{lecturerData.fullName}'s Classes</h1>
+        <div className="overflow-x-auto shadow-lg">
+          <table className="min-w-full bg-white border-collapse border border-gray-200">
+            <thead>
+              <tr>
+                <th className="p-4 border border-gray-200">Course Name</th>
+                <th className="p-4 border border-gray-200">Total Students</th>
+                <th className="p-4 border border-gray-200">Sessions Undertaken</th>
+              </tr>
+            </thead>
+            <tbody>
+              {!isLoading && lecturerData.coursesTaught.map((course) => (
+                <tr key={course.courseId} className="hover:bg-gray-100">
+                  <td className="p-4 border border-gray-200">{course.courseName}</td>
+                  <td className="p-4 border border-gray-200">{course.students.length}</td>
+                  <td className="p-4 border border-gray-200">{course.totalSessions}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-            {/* Form to assign a new course */}
-            <div className="mt-8 bg-white p-6 shadow-lg rounded-lg">
-              <h2 className="text-xl font-bold mb-4">Assign New Course</h2>
-              <div className="grid grid-cols-1 gap-4">
-                <select
-                  value={selectedCourseId}
-                  onChange={handleCourseChange}
-                  className="p-2 border border-gray-300 rounded"
-                >
-                  <option value="">Select a Course</option>
-                  {availableCourses.map((course) => (
-                    <option key={course.id} value={course.id}>
-                      {course.className}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <button
-                onClick={handleAssignCourse}
-                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
-              >
-                Assign Course
-              </button>
-            </div>
+        {/* Form to assign a new course */}
+        <div className="mt-8 bg-white p-6 shadow-lg rounded-lg">
+          <h2 className="text-xl font-bold mb-4">Assign New Course</h2>
+          <div className="grid grid-cols-1 gap-4">
+            <select
+              value={selectedCourseId}
+              onChange={handleCourseChange}
+              className="p-2 border border-gray-300 rounded"
+            >
+              <option value="">Select a Course</option>
+              {!courseFetching && availableCourses.length > 0  && availableCourses.map((course) => (
+                <option key={course.courseId} value={course.courseId}>
+                  {course.courseName}
+                </option>
+              ))}
+            </select>
           </div>
-        )}
+          <button
+            onClick={handleAssignCourse}
+            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
+          >
+            Assign Course
+          </button>
+        </div>
       </div>
     </AdminSidebar>
   );

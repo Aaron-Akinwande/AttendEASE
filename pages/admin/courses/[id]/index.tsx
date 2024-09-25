@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import AdminSidebar from '@/components/adminsidebar';
+import { queryKeys } from '@/api/queryKey';
+import { getRequest } from '@/api/apiCall';
+import { GET_COURSE } from '@/api/apiURL';
+import { useQuery } from '@tanstack/react-query';
 
 const CourseStudents = () => {
   const router = useRouter();
@@ -10,28 +14,30 @@ const CourseStudents = () => {
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
+
+  const uid: any =
+  typeof window !== "undefined" && localStorage.getItem("admin_token");
+
+  // Fetch courses from the API
+  const { data: courseData, isLoading: coursesLoading, isError: coursesError } = useQuery({
+    queryKey: [queryKeys.getcourse, uid, id], 
+    queryFn: async () => await getRequest({ url: GET_COURSE(uid,id) }),
+    
+      enabled: !!id, 
+  })
+
   useEffect(() => {
-    // Fetch course data and enrolled students from an API (replace with real API calls)
-    if (id) {
-      setCourse({
-        id: id,
-        name: 'Mathematics 101',
-        lecturer: 'Dr. John Doe',
-        totalSessions: 10,
-      });
-      setStudents([
-        { id: 1, name: 'John Doe', attendancePercentage: 80 },
-        { id: 2, name: 'Jane Smith', attendancePercentage: 90 },
-        { id: 3, name: 'Jack Dane', attendancePercentage: 75 },
-      ]);
-    }
-  }, [id]);
+    
+      setCourse(courseData);
+      setStudents(courseData?.students);
+    
+  }, [courseData]);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredStudents = students.filter(student =>
+  const filteredStudents = students?.filter(student =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -41,9 +47,9 @@ const CourseStudents = () => {
         {course && (
           <div>
             <h1 className="text-2xl font-bold mb-6">
-              Students in {course.name}
+              Students in {course.courseName}
             </h1>
-            <h2 className="text-lg mb-4">Lecturer: {course.lecturer}</h2>
+            <h2 className="text-lg mb-4">Lecturer: {course.courseLecturer}</h2>
 
             {/* Search Input */}
             <input
@@ -63,8 +69,8 @@ const CourseStudents = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredStudents.map((student) => (
-                    <tr key={student.id} className="hover:bg-gray-100">
+                  {filteredStudents.map((student, index) => (
+                    <tr key={index} className="hover:bg-gray-100">
                       <td className="p-4 border border-gray-200">
                         {student.name}
                       </td>

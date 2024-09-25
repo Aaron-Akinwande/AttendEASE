@@ -1,74 +1,55 @@
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import React, { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import AdminSidebar from "@/components/adminsidebar";
+import { getRequest, postRequest } from "@/api/apiCall";
+import { STUDENTS } from "@/api/apiURL"; // Replace with actual API URL for fetching students
+import { queryKeys } from "@/api/queryKey"; // Assuming this contains your query keys
+import { useRouter } from "next/router";
 
 const StudentList = () => {
-  const [students, setStudents] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterDept, setFilterDept] = useState("");
-  const [filteredStudents, setFilteredStudents] = useState([]);
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [newStudent, setNewStudent] = useState({
-    id: "",
-    name: "",
-    email: "",
-    department: "",
-  });
 
   const router = useRouter();
+  const uid: any = typeof window !== 'undefined' && localStorage.getItem("admin_token");
 
-  useEffect(() => {
-    // Simulate fetching data from an API (replace with actual API call)
-    const fetchedStudents = [
-      {
-        id: 1,
-        name: "John Doe",
-        email: "john.doe@example.com",
-        department: "Mathematics",
-      },
-      {
-        id: 2,
-        name: "Jane Smith",
-        email: "jane.smith@example.com",
-        department: "Physics",
-      },
-      {
-        id: 3,
-        name: "Alice Brown",
-        email: "alice.brown@example.com",
-        department: "Chemistry",
-      },
-      {
-        id: 4,
-        name: "Robert Green",
-        email: "robert.green@example.com",
-        department: "Mathematics",
-      },
-      // Add more students as needed
-    ];
-    setStudents(fetchedStudents);
-    setFilteredStudents(fetchedStudents);
-  }, []);
 
-  useEffect(() => {
-    let filtered = students;
+  const queryClient = useQueryClient();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterDept, setFilterDept] = useState("");
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newStudent, setNewStudent] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    department: "",
+    phoneNumber: "",
+  });
 
-    if (filterDept) {
-      filtered = filtered.filter(
-        (student) => student.department === filterDept
-      );
-    }
+  // Fetch students using react-query
+  const { data: students = [], isLoading, isError } = useQuery({
+    queryKey: [queryKeys.getStudents],
+    queryFn: async () => await getRequest({ url: STUDENTS(uid) }),
+  });
 
-    if (searchTerm) {
-      filtered = filtered.filter(
-        (student) =>
-          student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          student.id.toString().includes(searchTerm)
-      );
-    }
-
-    setFilteredStudents(filtered);
-  }, [searchTerm, filterDept, students]);
+  const addStudentMutation = useMutation({
+    mutationFn: async (newStudentData) => {
+      await postRequest({ url: STUDENTS(uid), data: newStudentData });
+    },
+    onSuccess: () => {
+      // Invalidate queries to refresh the student list after adding a new student
+      queryClient.invalidateQueries({ queryKey: [queryKeys.getStudents] });
+      setShowAddForm(false);
+      setNewStudent({
+        firstName: "",
+        lastName: "",
+        email: "",
+        department: "",
+        phoneNumber: "",
+      });
+    },
+    onError: (error) => {
+      console.error("Error adding student:", error);
+    },
+  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -76,15 +57,39 @@ const StudentList = () => {
   };
 
   const handleAddStudent = () => {
-    setStudents((prevStudents) => [...prevStudents, newStudent]);
-    setFilteredStudents((prevStudents) => [...prevStudents, newStudent]);
-    setShowAddForm(false);
-    setNewStudent({ id: "", name: "", email: "", department: "" });
+    addStudentMutation.mutate(newStudent);
   };
+
+  const filteredStudents = students.filter((student) => {
+    const fullName = `${student.firstName} ${student.lastName}`;
+    return (
+      (filterDept ? student.department === filterDept : true) &&
+      (searchTerm
+        ? fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          student.id.toString().includes(searchTerm)
+        : true)
+    );
+  });
 
   const viewStudentDetails = (studentId) => {
     router.push(`/admin/students/${studentId}`);
   };
+
+  if (isLoading) {
+    return (
+      <AdminSidebar>
+        <div className="p-6 min-h-screen">Loading...</div>
+      </AdminSidebar>
+    );
+  }
+
+  if (isError) {
+    return (
+      <AdminSidebar>
+        <div className="p-6 min-h-screen">Error loading students.</div>
+      </AdminSidebar>
+    );
+  }
 
   return (
     <AdminSidebar>
@@ -122,21 +127,21 @@ const StudentList = () => {
           <div className="mb-6 p-4 border rounded bg-white shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Add New Student</h2>
             <div className="flex flex-col mb-4">
-              <label className="mb-2 font-medium">Student ID:</label>
+              <label className="mb-2 font-medium">First Name:</label>
               <input
                 type="text"
-                name="id"
-                value={newStudent.id}
+                name="firstName"
+                value={newStudent.firstName}
                 onChange={handleInputChange}
                 className="p-2 border border-gray-300 rounded"
               />
             </div>
             <div className="flex flex-col mb-4">
-              <label className="mb-2 font-medium">Name:</label>
+              <label className="mb-2 font-medium">Last Name:</label>
               <input
                 type="text"
-                name="name"
-                value={newStudent.name}
+                name="lastName"
+                value={newStudent.lastName}
                 onChange={handleInputChange}
                 className="p-2 border border-gray-300 rounded"
               />
@@ -161,6 +166,16 @@ const StudentList = () => {
                 className="p-2 border border-gray-300 rounded"
               />
             </div>
+            <div className="flex flex-col mb-4">
+              <label className="mb-2 font-medium">Phone Number:</label>
+              <input
+                type="text"
+                name="phoneNumber"
+                value={newStudent.phoneNumber}
+                onChange={handleInputChange}
+                className="p-2 border border-gray-300 rounded"
+              />
+            </div>
             <button
               onClick={handleAddStudent}
               className="bg-green-500 text-white px-4 py-2 rounded"
@@ -175,8 +190,10 @@ const StudentList = () => {
             <thead>
               <tr>
                 <th className="p-4 border border-gray-200">Student ID</th>
-                <th className="p-4 border border-gray-200">Name</th>
+                <th className="p-4 border border-gray-200">First Name</th>
+                <th className="p-4 border border-gray-200">Last Name</th>
                 <th className="p-4 border border-gray-200">Email</th>
+                <th className="p-4 border border-gray-200">Phone Number</th>
                 <th className="p-4 border border-gray-200">Department</th>
                 <th className="p-4 border border-gray-200">Actions</th>
               </tr>
@@ -185,13 +202,11 @@ const StudentList = () => {
               {filteredStudents.map((student) => (
                 <tr key={student.id} className="hover:bg-gray-100">
                   <td className="p-4 border border-gray-200">{student.id}</td>
-                  <td className="p-4 border border-gray-200">{student.name}</td>
-                  <td className="p-4 border border-gray-200">
-                    {student.email}
-                  </td>
-                  <td className="p-4 border border-gray-200">
-                    {student.department}
-                  </td>
+                  <td className="p-4 border border-gray-200">{student.firstName}</td>
+                  <td className="p-4 border border-gray-200">{student.lastName}</td>
+                  <td className="p-4 border border-gray-200">{student.email}</td>
+                  <td className="p-4 border border-gray-200">{student.phoneNumber}</td>
+                  <td className="p-4 border border-gray-200">{student.department}</td>
                   <td className="p-4 border border-gray-200">
                     <button
                       onClick={() => viewStudentDetails(student.id)}
@@ -204,9 +219,7 @@ const StudentList = () => {
               ))}
               {filteredStudents.length === 0 && (
                 <tr>
-                  <td 
-                //   colSpan="5" 
-                  className="p-4 text-center text-gray-500">
+                  <td className="p-4 text-center text-gray-500" >
                     No students found
                   </td>
                 </tr>

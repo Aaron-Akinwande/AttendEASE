@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import {
   FaBars,
@@ -11,11 +12,21 @@ import {
 import { MdOutlineQrCodeScanner } from "react-icons/md";
 
 const Sidebar = ({ children }) => {
+
+  const router = useRouter();
+
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("admin_token");
+    router.push(`/login`, `/login`);
+    alert("User Logged Out");
+  };
+
 
   return (
     <div className="flex">
@@ -93,7 +104,8 @@ const Sidebar = ({ children }) => {
             </li>
             <li>
               <a
-                href="/login"
+                // href="/login"
+                onClick={handleLogout}
                 className="flex items-center text-gray-700 hover:text-blue-600"
               >
                 <FaSignOutAlt className="mr-3" />
