@@ -75,7 +75,7 @@ const CourseStudents = () => {
                         {student.name}
                       </td>
                       <td className="p-4 border border-gray-200">
-                        {student.attendancePercentage}%
+                        {(student.attendedSessions/course.totalSessions) * 100}%
                       </td>
                     </tr>
                   ))}

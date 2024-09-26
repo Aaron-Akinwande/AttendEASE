@@ -1,6 +1,10 @@
 import Sidebar from "@/components/sidebar";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getRequest, patchRequest } from "@/api/apiCall";
+import { GET_COURSE } from "@/api/apiURL";
+import { queryKeys } from "@/api/queryKey";
 import Barcode from "react-barcode"; 
 import { FaTimes } from "react-icons/fa"; 
 
@@ -8,16 +12,22 @@ const ClassDetail = () => {
   const router = useRouter();
   const { id } = router.query; 
 
-  // Initial class and student data (replace with actual fetching logic)
+  const uid = typeof window !== "undefined" && localStorage.getItem("lect_token");
+
+  const queryClient = useQueryClient();
+
+  // Fetch the course data
+  const { data: courseData, isSuccess } = useQuery({
+    queryKey: [queryKeys.getcourse, uid, id],
+    queryFn: async () => await getRequest({ url: GET_COURSE(uid, id) }),
+    enabled: !!id,
+  });
+
   const [classData, setClassData] = useState({
-    id: 1,
-    name: "Computer Science 101",
-    totalSessions: 5, 
-    students: [
-      { id: 1, name: "John Doe", attendance: false, attendedSessions: 4 },
-      { id: 2, name: "Jane Smith", attendance: false, attendedSessions: 5 },
-      { id: 3, name: "Tom Johnson", attendance: false, attendedSessions: 3 },
-    ],
+    id: 0,
+    name: "",
+    totalSessions: 0,
+    students: [],
   });
 
   const [sessionActive, setSessionActive] = useState(false);
@@ -25,9 +35,15 @@ const ClassDetail = () => {
   const [searchQuery, setSearchQuery] = useState(""); 
 
   useEffect(() => {
-    // Fetch the class data including students and class name using the `id`
-    // Replace this with actual fetching logic based on `id`.
-  }, [id]);
+    if (isSuccess && courseData) {
+      setClassData({
+        id: courseData.courseId,
+        name: courseData.courseName,
+        totalSessions: courseData.totalSessions,
+        students: courseData.students || [],
+      });
+    }
+  }, [isSuccess, courseData]);
 
   const filteredStudents = classData.students.filter((student) =>
     student.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -44,8 +60,9 @@ const ClassDetail = () => {
 
   const handleStartSession = () => {
     setSessionActive(true);
-    setBarcodeValue(`class-${Date.now()}`); 
+    setBarcodeValue(`class-${Date.now()}`);
   };
+
   const handleEndSession = () => {
     const attendedStudents = classData.students.filter(
       (student) => student.attendance
@@ -69,7 +86,35 @@ const ClassDetail = () => {
     setSessionActive(false);
 
     alert(`Session ended. ${attendedStudents.length} students marked present.`);
+
+    const updatedData = {
+      totalSessions: updatedTotalSessions,
+      students: updatedStudents,
+    }
+
+    // Make the PATCH request to update the attendance
+    updateAttendanceMutation.mutate(updatedData);
   };
+
+  useEffect(() => {
+    
+  console.log(classData)
+    
+  }, [classData])
+  
+
+  // Define the PATCH request mutation using useMutation
+  const updateAttendanceMutation = useMutation({
+    mutationFn: async (updatedData) => {
+      await patchRequest({
+        url: GET_COURSE(uid, id),
+        data: {...updatedData},
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [queryKeys.getstudent, uid, id] });
+    },
+  });
 
   const getAttendancePercentage = (attendedSessions) => {
     return classData.totalSessions > 0
@@ -129,7 +174,7 @@ const ClassDetail = () => {
         )}
 
         {sessionActive && (
-          <div className=" pt-5">
+          <div className="pt-5">
             <h3 className="text-xl font-semibold text-gray-700 mb-2">
               Mark Attendance
             </h3>
@@ -162,7 +207,7 @@ const ClassDetail = () => {
         )}
 
         {!sessionActive && (
-          <div className=" pt-2">
+          <div className="pt-2">
             <h3 className="text-xl font-semibold text-gray-700 mb-2">
               Students in Class
             </h3>

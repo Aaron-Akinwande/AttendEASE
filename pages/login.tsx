@@ -28,6 +28,7 @@ export default function Login() {
       console.log("Login Success");
       router.push(`/${userRole}`);
       localStorage.setItem("admin_token", data.adminId)
+      localStorage.setItem("lect_token", data.id)
     },
   });
 

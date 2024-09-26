@@ -23,6 +23,7 @@ const Sidebar = ({ children }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("admin_token");
+    localStorage.removeItem("lect_token");
     router.push(`/login`, `/login`);
     alert("User Logged Out");
   };
@@ -68,11 +69,11 @@ const Sidebar = ({ children }) => {
             </li> */}
             <li>
               <a
-                href="/teacher/classes"
+                href="/teacher/courses"
                 className="flex items-center text-gray-700 hover:text-blue-600"
               >
                 <FaChalkboardTeacher className="mr-3" />
-                <span>Classes</span>
+                <span>Courses</span>
               </a>
             </li>
             {/* <li>
