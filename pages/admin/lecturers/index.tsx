@@ -87,13 +87,13 @@ const LecturersList = () => {
     addLecturer(newLecturer); 
   };
 
-  if (isLoading) {
-    return <AdminSidebar>Loading lecturers...</AdminSidebar>;
-  }
+  // if (isLoading) {
+  //   return <AdminSidebar>Loading lecturers...</AdminSidebar>;
+  // }
 
-  if (isError) {
-    return <AdminSidebar>Error fetching lecturers</AdminSidebar>;
-  }
+  // if (isError) {
+  //   return <AdminSidebar>Error fetching lecturers</AdminSidebar>;
+  // }
 
   return (
     <AdminSidebar>

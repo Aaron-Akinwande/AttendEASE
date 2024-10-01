@@ -80,21 +80,21 @@ const ProfilePage = () => {
     editAdmin(updatedProfile);
   };
 
-  if (isLoading) {
-    return (
-      <AdminSidebar>
-        <div className="p-6 min-h-screen">Loading...</div>
-      </AdminSidebar>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <AdminSidebar>
+  //       <div className="p-6 min-h-screen">Loading...</div>
+  //     </AdminSidebar>
+  //   );
+  // }
 
-  if (isError) {
-    return (
-      <AdminSidebar>
-        <div className="p-6 min-h-screen">Error loading profile.</div>
-      </AdminSidebar>
-    );
-  }
+  // if (isError) {
+  //   return (
+  //     <AdminSidebar>
+  //       <div className="p-6 min-h-screen">Error loading profile.</div>
+  //     </AdminSidebar>
+  //   );
+  // }
 
   return (
     <AdminSidebar>

@@ -85,13 +85,13 @@ useEffect(() => {
     });
   };
 
-  if (coursesLoading || lecturersLoading) {
-    return <AdminSidebar>Loading data...</AdminSidebar>;
-  }
+  // if (coursesLoading || lecturersLoading) {
+  //   return <AdminSidebar>Loading data...</AdminSidebar>;
+  // }
 
-  if (coursesError || lecturersError) {
-    return <AdminSidebar>Error fetching data</AdminSidebar>;
-  }
+  // if (coursesError || lecturersError) {
+  //   return <AdminSidebar>Error fetching data</AdminSidebar>;
+  // }
 
   return (
     <AdminSidebar>
