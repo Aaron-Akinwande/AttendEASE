@@ -11,7 +11,6 @@ const ProfilePage = () => {
   const id = typeof window !== "undefined" && localStorage.getItem("lect_token");
   const queryClient = useQueryClient();
 
-  // Fetch lecturer data
   const {
     data: profileData,
     isLoading,
@@ -22,9 +21,9 @@ const ProfilePage = () => {
     enabled: !!uid,
   });
 
-  // Mutation to update lecturer data
+  
   const { mutate: editLecturer, isPending } = useMutation({
-    mutationFn: async (edit) => {
+    mutationFn: async (edit: any) => {
       await patchRequest({ url: LECTURER(uid, id), data: edit });
     },
     onSuccess: () => {
@@ -71,25 +70,26 @@ const ProfilePage = () => {
       phoneNumber: profile.phone,
       password: profile.password ? profile.password : undefined,
     };
+
     editLecturer(updatedProfile);
 
   };
 
-  if (isLoading) {
-    return (
-      <Sidebar>
-        <div className="p-6 min-h-screen">Loading...</div>
-      </Sidebar>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <Sidebar>
+  //       <div className="p-6 min-h-screen">Loading...</div>
+  //     </Sidebar>
+  //   );
+  // }
 
-  if (isError) {
-    return (
-      <Sidebar>
-        <div className="p-6 min-h-screen">Error loading profile.</div>
-      </Sidebar>
-    );
-  }
+  // if (isError) {
+  //   return (
+  //     <Sidebar>
+  //       <div className="p-6 min-h-screen">Error loading profile.</div>
+  //     </Sidebar>
+  //   );
+  // }
 
   return (
     <Sidebar>

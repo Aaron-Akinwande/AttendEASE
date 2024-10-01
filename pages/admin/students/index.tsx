@@ -31,7 +31,7 @@ const StudentList = () => {
   });
 
   const addStudentMutation = useMutation({
-    mutationFn: async (newStudentData) => {
+    mutationFn: async (newStudentData: any) => {
       await postRequest({ url: STUDENTS(uid), data: newStudentData });
     },
     onSuccess: () => {
@@ -75,21 +75,21 @@ const StudentList = () => {
     router.push(`/admin/students/${studentId}`);
   };
 
-  if (isLoading) {
-    return (
-      <AdminSidebar>
-        <div className="p-6 min-h-screen">Loading...</div>
-      </AdminSidebar>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <AdminSidebar>
+  //       <div className="p-6 min-h-screen">Loading...</div>
+  //     </AdminSidebar>
+  //   );
+  // }
 
-  if (isError) {
-    return (
-      <AdminSidebar>
-        <div className="p-6 min-h-screen">Error loading students.</div>
-      </AdminSidebar>
-    );
-  }
+  // if (isError) {
+  //   return (
+  //     <AdminSidebar>
+  //       <div className="p-6 min-h-screen">Error loading students.</div>
+  //     </AdminSidebar>
+  //   );
+  // }
 
   return (
     <AdminSidebar>

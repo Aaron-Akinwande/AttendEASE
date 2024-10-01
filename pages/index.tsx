@@ -47,7 +47,7 @@ export default function Home() {
         <section className="flex items-center justify-center flex-col text-center py-20">
           <h2 className="text-5xl font-extrabold text-white mb-4">Welcome to AttendEase</h2>
           <p className="text-xl text-white mb-8">Streamlining attendance tracking with ease and efficiency.</p>
-          <Link href="/register" passHref>
+          <Link href="/login" passHref>
             <div className="cursor-pointer bg-white text-blue-600 px-8 py-4 rounded-full shadow-lg font-semibold hover:bg-gray-100">
               Get Started
             </div>

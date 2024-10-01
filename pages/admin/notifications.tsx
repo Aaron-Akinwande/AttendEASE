@@ -25,7 +25,7 @@ const NotificationsPage = () => {
   });
 
   const { mutate: sendNotification, isPending } = useMutation({
-    mutationFn: async (newNotification) => {
+    mutationFn: async (newNotification: any) => {
       await postRequest({ url: NOTIFICATIONS(uid), data: newNotification });
     },
     onSuccess: () => {
@@ -48,21 +48,21 @@ const NotificationsPage = () => {
     }
   };
 
-  if (isLoading) {
-    return (
-      <AdminSidebar>
-        <div className="p-6 min-h-screen">Loading...</div>
-      </AdminSidebar>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <AdminSidebar>
+  //       <div className="p-6 min-h-screen">Loading...</div>
+  //     </AdminSidebar>
+  //   );
+  // }
 
-  if (isError) {
-    return (
-      <AdminSidebar>
-        <div className="p-6 min-h-screen">Error loading notifications.</div>
-      </AdminSidebar>
-    );
-  }
+  // if (isError) {
+  //   return (
+  //     <AdminSidebar>
+  //       <div className="p-6 min-h-screen">Error loading notifications.</div>
+  //     </AdminSidebar>
+  //   );
+  // }
 
   return (
     <AdminSidebar>
