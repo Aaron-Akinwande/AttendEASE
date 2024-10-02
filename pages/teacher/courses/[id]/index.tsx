@@ -60,7 +60,7 @@ const ClassDetail = () => {
 
   const handleStartSession = () => {
     setSessionActive(true);
-    setBarcodeValue(`class-${Date.now()}`);
+    setBarcodeValue(`class-${classData.id}`);
   };
 
   const handleEndSession = () => {
@@ -105,7 +105,7 @@ const ClassDetail = () => {
 
   // Define the PATCH request mutation using useMutation
   const updateAttendanceMutation = useMutation({
-    mutationFn: async (updatedData) => {
+    mutationFn: async (updatedData: any) => {
       await patchRequest({
         url: GET_COURSE(uid, id),
         data: {...updatedData},
