@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AdminSidebar from "@/components/adminsidebar";
 import { getRequest, patchRequest } from "@/api/apiCall"; // Assume these are defined in your apiCall file
-import { STUDENT, GET_COURSES } from "@/api/apiURL"; // Add appropriate API URLs
+import { STUDENT, GET_COURSES, GET_COURSE } from "@/api/apiURL"; // Add appropriate API URLs
 import { queryKeys } from "@/api/queryKey"; // Adjust this according to your query key definitions
 
 const StudentDetail = () => {
@@ -42,19 +42,51 @@ const StudentDetail = () => {
     },
   });
 
+  // const { mutate: assignCourse } = useMutation({
+  //   mutationFn: async (newCourse) => {
+  //     // Add the new course to the student's list of courses
+  //     const updatedCourses = [...assignedCourses, newCourse];
+  //     await patchRequest({
+  //       url: STUDENT(uid, id),
+  //       data: { courses: updatedCourses },
+  //     });
+  //   },
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: [queryKeys.getstudent, uid, id] });
+  //   },
+  // });
+
   const { mutate: assignCourse } = useMutation({
-    mutationFn: async (newCourse) => {
-      // Add the new course to the student's list of courses
+    mutationFn: async (newCourse: any) => {
       const updatedCourses = [...assignedCourses, newCourse];
+      
+
       await patchRequest({
         url: STUDENT(uid, id),
         data: { courses: updatedCourses },
+      });
+  
+
+      const course = await getRequest({ url:GET_COURSE(uid, newCourse.courseId) });
+  
+      // 4. Add the student to the list of students in the course
+      const updatedStudents = [...course.students, {
+        id: student.id, 
+        name: student.firstName + student.lastName,
+        attendedSessions: 0, 
+      }];
+  
+      // 5. Update the course's student list in the database
+      await patchRequest({
+        url: `${GET_COURSES(uid)}/${newCourse.courseId}`,
+        data: { students: updatedStudents },
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [queryKeys.getstudent, uid, id] });
     },
   });
+  
 
   useEffect(() => {
     if (studentData) {

@@ -12,7 +12,7 @@ const ClassDetail = () => {
   const router = useRouter();
   const { id } = router.query; 
 
-  const uid = typeof window !== "undefined" && localStorage.getItem("lect_token");
+  const uid = typeof window !== "undefined" && localStorage.getItem("admin_token");
 
   const queryClient = useQueryClient();
 
